@@ -89,7 +89,6 @@ import mongo_lib.mongo_class as mongo_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -116,8 +115,6 @@ def get_repset_name(svr_cfg, **kwargs):
 
     Arguments:
         (input) svr_cfg -> Server Configuration module.
-        (input) **kwargs:
-            None
         (output) rep_set -> Replication set name.
 
     """
@@ -149,8 +146,6 @@ def get_repset_hosts(svr_cfg, **kwargs):
 
     Arguments:
         (input) svr_cfg -> Server Configuration module.
-        (input) **kwargs:
-            None
         (output) repset_hosts -> Contain string of rep set hosts.
 
     """
@@ -216,8 +211,6 @@ def process_args(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
         (output) exit_flag -> True|False - if an error has occurred.
         (output) qry -> Mongo search query criteria.
 
@@ -271,8 +264,6 @@ def delete_docs(REPSET, args_array, **kwargs):
     Arguments:
         (input) REPSET -> Replication Set instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
@@ -313,8 +304,6 @@ def truncate_coll(REPSET, args_array, **kwargs):
     Arguments:
         (input) REPSET -> Replication Set instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
