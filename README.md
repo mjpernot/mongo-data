@@ -143,6 +143,7 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 
 ```
 cd {Python_Project}/mongo-data
+test/unit/mongo_db_data/get_repset_name.py
 test/unit/mongo_db_data/help_message.py
 test/unit/mongo_db_data/main.py
 test/unit/mongo_db_data/run_program.py
