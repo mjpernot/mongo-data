@@ -6,5 +6,6 @@
 
 echo ""
 echo "Unit testing..."
+test/unit/mongo_db_data/get_repset_hosts.py
 test/unit/mongo_db_data/get_repset_name.py
 test/unit/mongo_db_data/help_message.py
