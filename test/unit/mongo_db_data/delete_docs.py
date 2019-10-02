@@ -163,7 +163,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_coll.return_value = RepSetColl()
-        mock_lib.file_2_list.return_value = []
+        mock_lib.file_2_list.return_value = ["File1"]
         mock_lib.str_2_type.return_value = {"query"}
         mock_disconnect.return_value = True
 
