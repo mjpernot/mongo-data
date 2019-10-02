@@ -14,6 +14,7 @@ coverage run -a --source=mongo_db_data test/unit/mongo_db_data/get_repset_name.p
 coverage run -a --source=mongo_db_data test/unit/mongo_db_data/help_message.py
 coverage run -a --source=mongo_db_data test/unit/mongo_db_data/insert_doc.py
 coverage run -a --source=mongo_db_data test/unit/mongo_db_data/process_args.py
+coverage run -a --source=mongo_db_data test/unit/mongo_db_data/run_program.py
 coverage run -a --source=mongo_db_data test/unit/mongo_db_data/truncate_coll.py
 
 

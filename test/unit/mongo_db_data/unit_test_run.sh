@@ -12,4 +12,5 @@ test/unit/mongo_db_data/get_repset_name.py
 test/unit/mongo_db_data/help_message.py
 test/unit/mongo_db_data/insert_doc.py
 test/unit/mongo_db_data/process_args.py
+test/unit/mongo_db_data/run_program.py
 test/unit/mongo_db_data/truncate_coll.py
