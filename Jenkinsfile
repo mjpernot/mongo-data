@@ -26,6 +26,7 @@ pipeline {
                 ./test/unit/mongo_db_data/get_repset_name.py
                 ./test/unit/mongo_db_data/help_message.py
                 ./test/unit/mongo_db_data/insert_doc.py
+                ./test/unit/mongo_db_data/process_args.py
                 deactivate
                 rm -rf test_env
                 """
