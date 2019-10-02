@@ -165,6 +165,7 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = RepSetColl()
         mock_lib.file_2_list.return_value = []
         mock_lib.str_2_type.return_value = {"query"}
+        mock_disconnect.return_value = True
 
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array2))
@@ -185,6 +186,7 @@ class UnitTest(unittest.TestCase):
 
         mock_coll.return_value = RepSetColl()
         mock_proc.return_value = (False, {"Query"})
+        mock_disconnect.return_value = True
 
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array))
@@ -204,6 +206,7 @@ class UnitTest(unittest.TestCase):
 
         mock_coll.return_value = RepSetColl()
         mock_proc.return_value = (False, {"Query"})
+        mock_disconnect.return_value = True
 
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array))
