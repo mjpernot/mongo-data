@@ -43,7 +43,7 @@ class RepSetColl(object):
 
     Methods:
         __init__ -> Class initialization.
-        coll_cnt -> Stub holder for mongo_class.RepSetColl.connect method.
+        connect -> Stub holder for mongo_class.RepSetColl.connect method.
         coll_del_many -> Stub holder for mongo_class.RepSetColl.coll_del_many.
 
     """
@@ -94,7 +94,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_no_repset_name -> Test with no repset name found.
+        test_file_list -> Test with file list passed.
         test_no_list_error -> Test with no file list passed, but with error.
         test_no_file_list -> Test with no file list passed.
 
