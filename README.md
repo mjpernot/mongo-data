@@ -151,6 +151,7 @@ test/unit/mongo_db_data/insert_doc.py
 test/unit/mongo_db_data/main.py
 test/unit/mongo_db_data/process_args.py
 test/unit/mongo_db_data/run_program.py
+test/unit/mongo_db_data/truncate_coll.py
 ```
 
 ### All unit testing
