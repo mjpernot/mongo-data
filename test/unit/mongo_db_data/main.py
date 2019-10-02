@@ -61,6 +61,7 @@ class UnitTest(unittest.TestCase):
         test_arg_noreq_xor_true -> Test arg_noreq_xor if returns true.
         test_arg_file_chk_true -> Test arg_file_chk if returns true.
         test_arg_file_chk_false -> Test arg_file_chk if returns false.
+        test_process_f_option -> Test with processing -f option.
 
     """
 
@@ -75,6 +76,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args_array = {"-c": "CfgFile", "-d": "CfgDir"}
+        self.args_array2 = {"-c": "CfgFile", "-d": "CfgDir", "-f": True}
 
     @mock.patch("mongo_db_data.gen_libs.help_func")
     @mock.patch("mongo_db_data.arg_parser")
@@ -361,6 +363,32 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_noreq_xor.return_value = True
         mock_arg.arg_file_chk.return_value = False
         mock_run.return_value = True
+
+        self.assertFalse(mongo_db_data.main())
+
+    @mock.patch("mongo_db_data.run_program")
+    @mock.patch("mongo_db_data.gen_libs")
+    @mock.patch("mongo_db_data.arg_parser")
+    def test_process_f_option(self, mock_arg, mock_lib, mock_run):
+
+        """Function:  test_process_f_option
+
+        Description:  Test with processing -f option.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array2
+        mock_lib.help_func.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = False
+        mock_arg.arg_xor_dict.return_value = True
+        mock_arg.arg_cond_req.return_value = True
+        mock_arg.arg_noreq_xor.return_value = True
+        mock_arg.arg_file_chk.return_value = False
+        mock_run.return_value = True
+        mock_lib.rm_dup_list.return_value = ["File1"]
 
         self.assertFalse(mongo_db_data.main())
 
