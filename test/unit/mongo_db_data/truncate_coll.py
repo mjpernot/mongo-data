@@ -109,9 +109,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class RepSet(object):
+        class RepSetCfg(object):
 
-            """Class:  RepSet
+            """Class:  RepSetCfg
 
             Description:  Class which is a representation of a RepSet class.
 
@@ -142,7 +142,7 @@ class UnitTest(unittest.TestCase):
                 self.repset = "RepSetName"
                 self.repset_hosts = ["List of hosts"]
 
-        self.repset = RepSet()
+        self.repset = RepSetCfg()
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
 
