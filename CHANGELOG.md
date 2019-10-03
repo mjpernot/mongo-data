@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2019-10-03
 ### Fixed
+- insert_doc:  Fixed problem with mutable default arguments issue.
 - process_args:  Fixed problem with mutable default arguments issue.
 - delete_docs:  Fixed problem with mutable default arguments issue.
 - truncate_coll:  Fixed problem with mutable default arguments issue.

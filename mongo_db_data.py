@@ -114,7 +114,7 @@ def get_repset_name(svr_cfg, **kwargs):
         or from the Mongo database.
 
     Arguments:
-        (input) svr_cfg -> Server Configuration module.
+        (input) svr_cfg -> Server configuration module.
         (output) rep_set -> Replication set name.
 
     """
@@ -176,11 +176,11 @@ def insert_doc(repclu, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+
     if args_array.get("-f", None):
         cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
                                     use_repset=True, **kwargs)
-
-        # Clone the list.
         orig_cmd = list(cmd)
 
         # Process files and add --file option.
