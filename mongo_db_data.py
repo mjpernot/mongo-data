@@ -397,15 +397,15 @@ def main():
     if "-f" in args_array:
         args_array["-f"] = gen_libs.rm_dup_list(args_array["-f"])
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if not arg_parser.arg_require(args_array, opt_req_list) \
-           and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-           and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-           and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-           and arg_parser.arg_noreq_xor(args_array, xor_noreq_list) \
-           and not arg_parser.arg_file_chk(args_array, file_chk_list):
-            run_program(args_array, func_dict, opt_arg=opt_arg_list,
-                        opt_rep=opt_arg_rep)
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
+       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
+       and arg_parser.arg_noreq_xor(args_array, xor_noreq_list) \
+       and not arg_parser.arg_file_chk(args_array, file_chk_list):
+        run_program(args_array, func_dict, opt_arg=opt_arg_list,
+                    opt_rep=opt_arg_rep)
 
 
 if __name__ == "__main__":
