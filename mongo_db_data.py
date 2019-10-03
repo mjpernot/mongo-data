@@ -89,7 +89,6 @@ import mongo_lib.mongo_class as mongo_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -115,9 +114,7 @@ def get_repset_name(svr_cfg, **kwargs):
         or from the Mongo database.
 
     Arguments:
-        (input) svr_cfg -> Server Configuration module.
-        (input) **kwargs:
-            None
+        (input) svr_cfg -> Server configuration module.
         (output) rep_set -> Replication set name.
 
     """
@@ -126,16 +123,16 @@ def get_repset_name(svr_cfg, **kwargs):
         rep_set = svr_cfg.repset
 
     except AttributeError:
-        COLL = mongo_class.Coll(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
+        coll = mongo_class.Coll(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
                                 svr_cfg.host, svr_cfg.port, "local",
                                 "system.replset", svr_cfg.auth,
                                 svr_cfg.conf_file)
 
         # Are there any records.
-        if COLL.coll_cnt() != 0:
-            rep_set = COLL.coll_find1().get("_id")
+        if coll.coll_cnt() != 0:
+            rep_set = coll.coll_find1().get("_id")
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([coll])
 
     return rep_set
 
@@ -149,8 +146,6 @@ def get_repset_hosts(svr_cfg, **kwargs):
 
     Arguments:
         (input) svr_cfg -> Server Configuration module.
-        (input) **kwargs:
-            None
         (output) repset_hosts -> Contain string of rep set hosts.
 
     """
@@ -164,7 +159,7 @@ def get_repset_hosts(svr_cfg, **kwargs):
     return repset_hosts
 
 
-def insert_doc(REPSET, args_array, **kwargs):
+def insert_doc(repclu, args_array, **kwargs):
 
     """Function:  insert_doc
 
@@ -172,23 +167,20 @@ def insert_doc(REPSET, args_array, **kwargs):
         can either be an external JSON document(s) or created internally
         and then inserted into the database.  Have the ability to
         insert multiple external JSON document files into the database.
-        NOTE:  Internal creation option is not yet available.
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
         (input) **kwargs:
-            opt_arg -> Dictionary of additional options to add.
             opt_rep -> Dictionary of replaceable arguments for each run.
 
     """
 
+    args_array = dict(args_array)
+
     if args_array.get("-f", None):
-
-        cmd = mongo_libs.create_cmd(REPSET, args_array, "mongoimport", "-p",
+        cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
                                     use_repset=True, **kwargs)
-
-        # Clone the list.
         orig_cmd = list(cmd)
 
         # Process files and add --file option.
@@ -196,15 +188,7 @@ def insert_doc(REPSET, args_array, **kwargs):
             upd_cmd = cmds_gen.add_cmd(cmd, arg=kwargs.get("opt_rep")["-f"],
                                        val=fname)
             cmds_gen.run_prog(upd_cmd)
-
             cmd = list(orig_cmd)
-
-    # Internal JSON doc creation.
-    else:
-        print("WARNING:  No code to generate JSON document is available yet.")
-        # outdata = {"Application" : "Mongo Replication - Internal" }
-        # mongo_libs.ins_doc(REPSET, args_array.get("-b"),
-        #                    args_array.get("-t"), outdata, **kwargs)
 
 
 def process_args(args_array, **kwargs):
@@ -216,14 +200,13 @@ def process_args(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
-        (output) exit_flag -> True|False - if an error has occurred.
+        (output) status -> True|False - If an error has occurred.
         (output) qry -> Mongo search query criteria.
 
     """
 
-    exit_flag = False
+    args_array = dict(args_array)
+    status = False
     qry = {}
 
     # Process key|value pairs.
@@ -235,7 +218,7 @@ def process_args(args_array, **kwargs):
         if key not in args_array and val in args_array:
             print("WARNING: Missing key for value: %s = '%s'"
                   % (val, args_array[val]))
-            exit_flag = True
+            status = True
             break
 
         # -kN option is missing, skip.
@@ -251,15 +234,15 @@ def process_args(args_array, **kwargs):
         except KeyError:
             print("WARNING: Missing value for key: %s = '%s'"
                   % (key, args_array[key]))
-            exit_flag = True
+            status = True
             break
 
         qry[args_array[key]] = sub_qry
 
-    return exit_flag, qry
+    return status, qry
 
 
-def delete_docs(REPSET, args_array, **kwargs):
+def delete_docs(repclu, args_array, **kwargs):
 
     """Function:  delete_docs
 
@@ -269,21 +252,20 @@ def delete_docs(REPSET, args_array, **kwargs):
         set of value(s).
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
-    COLL = mongo_class.RepSetColl(REPSET.name, REPSET.user, REPSET.passwd,
-                                  REPSET.host, REPSET.port, REPSET.auth,
-                                  repset=REPSET.repset,
-                                  repset_hosts=REPSET.repset_hosts,
+    args_array = dict(args_array)
+    coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
+                                  repclu.host, repclu.port, repclu.auth,
+                                  repset=repclu.repset,
+                                  repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
                                   db_auth=args_array.get("-a", None))
-    COLL.connect()
+    coll.connect()
 
     if args_array.get("-f", None):
 
@@ -292,45 +274,43 @@ def delete_docs(REPSET, args_array, **kwargs):
 
             # Process each line as a delete.
             for qry in lines:
-                COLL.coll_del_many(gen_libs.str_2_type(qry))
+                coll.coll_del_many(gen_libs.str_2_type(qry))
 
     # Assume -kN and -lN options.
     else:
-        exit_flag, qry = process_args(args_array)
+        status, qry = process_args(args_array)
 
-        if not exit_flag:
-            COLL.coll_del_many(qry)
+        if not status:
+            coll.coll_del_many(qry)
 
-    cmds_gen.disconnect([COLL])
+    cmds_gen.disconnect([coll])
 
 
-def truncate_coll(REPSET, args_array, **kwargs):
+def truncate_coll(repclu, args_array, **kwargs):
 
     """Function:  truncate_coll
 
     Description:  Truncate a collection in a Mongo database.
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
-    COLL = mongo_class.RepSetColl(REPSET.name, REPSET.user, REPSET.passwd,
-                                  REPSET.host, REPSET.port, REPSET.auth,
-                                  repset=REPSET.repset,
-                                  repset_hosts=REPSET.repset_hosts,
+    args_array = dict(args_array)
+    coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
+                                  repclu.host, repclu.port, repclu.auth,
+                                  repset=repclu.repset,
+                                  repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
                                   db_auth=args_array.get("-a", None))
-    COLL.connect()
+    coll.connect()
 
     # Require override option.
-    COLL.coll_del_many({}, True)
-
-    cmds_gen.disconnect([COLL])
+    coll.coll_del_many({}, True)
+    cmds_gen.disconnect([coll])
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -342,23 +322,21 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Dict of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            opt_arg -> Dictionary of additional options to add.
-            opt_rep -> Dictionary of replaceable arguments for each run.
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
     svr_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
-
-    REPSET = mongo_class.RepSet(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
+    repclu = mongo_class.RepSet(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
                                 svr_cfg.host, svr_cfg.port, svr_cfg.auth,
                                 repset=rep_set, repset_hosts=repset_hosts)
 
     # Intersect args_array and func_dict to determine which functions to call.
     for func in set(args_array.keys()) & set(func_dict.keys()):
-        func_dict[func](REPSET, args_array, **kwargs)
+        func_dict[func](repclu, args_array, **kwargs)
 
 
 def main():
@@ -408,15 +386,15 @@ def main():
     if "-f" in args_array:
         args_array["-f"] = gen_libs.rm_dup_list(args_array["-f"])
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if not arg_parser.arg_require(args_array, opt_req_list) \
-           and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-           and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-           and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-           and arg_parser.arg_noreq_xor(args_array, xor_noreq_list) \
-           and not arg_parser.arg_file_chk(args_array, file_chk_list):
-            run_program(args_array, func_dict, opt_arg=opt_arg_list,
-                        opt_rep=opt_arg_rep)
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
+       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
+       and arg_parser.arg_noreq_xor(args_array, xor_noreq_list) \
+       and not arg_parser.arg_file_chk(args_array, file_chk_list):
+        run_program(args_array, func_dict, opt_arg=opt_arg_list,
+                    opt_rep=opt_arg_rep)
 
 
 if __name__ == "__main__":

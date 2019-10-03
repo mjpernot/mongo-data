@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.0.2] - 2019-10-03
+### Fixed
+- insert_doc:  Fixed problem with mutable default arguments issue.
+- process_args:  Fixed problem with mutable default arguments issue.
+- delete_docs:  Fixed problem with mutable default arguments issue.
+- truncate_coll:  Fixed problem with mutable default arguments issue.
+- run_program:  Fixed problem with mutable default arguments issue.
+
+### Changed
+- get_repset_name:  Changed variable to standard naming convention.
+- insert_doc:  Removed commented out code.  Not yet implemented.
+- insert_doc:  Changed variable to standard naming convention.
+- process_args:  Changed variable name to be more descriptive of use.
+- delete_docs:  Changed variable name to be more descriptive of use.
+- delete_docs:  Changed variables to standard naming convention.
+- truncate_coll:  Changed variables to standard naming convention.
+- run_program:  Changed variable to standard naming convention.
+- main:  Refactored "if" statements.
+- Documentation updates.
+
+
 ## [2.0.1] - 2018-11-28
 ### Changed
 - delete_docs:  Removed "gen_libs.rm_newline_list" call.
@@ -37,7 +58,7 @@ Breaking Change
 
 ## [1.1.0] - 2017-08-16
 ### Changed
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 - Change single quotes to double quotes.
 - Convert program to use local libraries from ./lib directory.
 
