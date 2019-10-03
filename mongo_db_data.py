@@ -252,7 +252,7 @@ def process_args(args_array, **kwargs):
     return exit_flag, qry
 
 
-def delete_docs(REPSET, args_array, **kwargs):
+def delete_docs(repclu, args_array, **kwargs):
 
     """Function:  delete_docs
 
@@ -262,19 +262,19 @@ def delete_docs(REPSET, args_array, **kwargs):
         set of value(s).
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
 
     """
 
-    COLL = mongo_class.RepSetColl(REPSET.name, REPSET.user, REPSET.passwd,
-                                  REPSET.host, REPSET.port, REPSET.auth,
-                                  repset=REPSET.repset,
-                                  repset_hosts=REPSET.repset_hosts,
+    coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
+                                  repclu.host, repclu.port, repclu.auth,
+                                  repset=repclu.repset,
+                                  repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
                                   db_auth=args_array.get("-a", None))
-    COLL.connect()
+    coll.connect()
 
     if args_array.get("-f", None):
 
@@ -283,16 +283,16 @@ def delete_docs(REPSET, args_array, **kwargs):
 
             # Process each line as a delete.
             for qry in lines:
-                COLL.coll_del_many(gen_libs.str_2_type(qry))
+                coll.coll_del_many(gen_libs.str_2_type(qry))
 
     # Assume -kN and -lN options.
     else:
         exit_flag, qry = process_args(args_array)
 
         if not exit_flag:
-            COLL.coll_del_many(qry)
+            coll.coll_del_many(qry)
 
-    cmds_gen.disconnect([COLL])
+    cmds_gen.disconnect([coll])
 
 
 def truncate_coll(repclu, args_array, **kwargs):
@@ -302,7 +302,7 @@ def truncate_coll(repclu, args_array, **kwargs):
     Description:  Truncate a collection in a Mongo database.
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
 
     """
