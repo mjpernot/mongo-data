@@ -295,7 +295,7 @@ def delete_docs(REPSET, args_array, **kwargs):
     cmds_gen.disconnect([COLL])
 
 
-def truncate_coll(REPSET, args_array, **kwargs):
+def truncate_coll(repclu, args_array, **kwargs):
 
     """Function:  truncate_coll
 
@@ -307,19 +307,19 @@ def truncate_coll(REPSET, args_array, **kwargs):
 
     """
 
-    COLL = mongo_class.RepSetColl(REPSET.name, REPSET.user, REPSET.passwd,
-                                  REPSET.host, REPSET.port, REPSET.auth,
-                                  repset=REPSET.repset,
-                                  repset_hosts=REPSET.repset_hosts,
+    coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
+                                  repclu.host, repclu.port, repclu.auth,
+                                  repset=repclu.repset,
+                                  repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
                                   db_auth=args_array.get("-a", None))
-    COLL.connect()
+    coll.connect()
 
     # Require override option.
-    COLL.coll_del_many({}, True)
+    coll.coll_del_many({}, True)
 
-    cmds_gen.disconnect([COLL])
+    cmds_gen.disconnect([coll])
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -331,9 +331,6 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Dict of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
-        (input) **kwargs:
-            opt_arg -> Dictionary of additional options to add.
-            opt_rep -> Dictionary of replaceable arguments for each run.
 
     """
 
