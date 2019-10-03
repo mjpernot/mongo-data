@@ -216,6 +216,7 @@ def process_args(args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     exit_flag = False
     qry = {}
 
