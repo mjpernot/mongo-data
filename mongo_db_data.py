@@ -267,6 +267,7 @@ def delete_docs(repclu, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
                                   repclu.host, repclu.port, repclu.auth,
                                   repset=repclu.repset,
