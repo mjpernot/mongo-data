@@ -307,6 +307,7 @@ def truncate_coll(repclu, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
                                   repclu.host, repclu.port, repclu.auth,
                                   repset=repclu.repset,
@@ -318,7 +319,6 @@ def truncate_coll(repclu, args_array, **kwargs):
 
     # Require override option.
     coll.coll_del_many({}, True)
-
     cmds_gen.disconnect([coll])
 
 
@@ -336,11 +336,9 @@ def run_program(args_array, func_dict, **kwargs):
 
     args_array = dict(args_array)
     func_dict = dict(func_dict)
-
     svr_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
-
     repclu = mongo_class.RepSet(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
                                 svr_cfg.host, svr_cfg.port, svr_cfg.auth,
                                 repset=rep_set, repset_hosts=repset_hosts)
