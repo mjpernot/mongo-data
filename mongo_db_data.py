@@ -159,7 +159,7 @@ def get_repset_hosts(svr_cfg, **kwargs):
     return repset_hosts
 
 
-def insert_doc(REPSET, args_array, **kwargs):
+def insert_doc(repclu, args_array, **kwargs):
 
     """Function:  insert_doc
 
@@ -170,17 +170,15 @@ def insert_doc(REPSET, args_array, **kwargs):
         NOTE:  Internal creation option is not yet available.
 
     Arguments:
-        (input) REPSET -> Replication Set instance.
+        (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
         (input) **kwargs:
-            opt_arg -> Dictionary of additional options to add.
             opt_rep -> Dictionary of replaceable arguments for each run.
 
     """
 
     if args_array.get("-f", None):
-
-        cmd = mongo_libs.create_cmd(REPSET, args_array, "mongoimport", "-p",
+        cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
                                     use_repset=True, **kwargs)
 
         # Clone the list.
@@ -191,7 +189,6 @@ def insert_doc(REPSET, args_array, **kwargs):
             upd_cmd = cmds_gen.add_cmd(cmd, arg=kwargs.get("opt_rep")["-f"],
                                        val=fname)
             cmds_gen.run_prog(upd_cmd)
-
             cmd = list(orig_cmd)
 
     # Internal JSON doc creation.
@@ -211,7 +208,7 @@ def process_args(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (output) status -> True|False - if an error has occurred.
+        (output) status -> True|False - If an error has occurred.
         (output) qry -> Mongo search query criteria.
 
     """
