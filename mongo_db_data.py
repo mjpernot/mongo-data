@@ -211,13 +211,13 @@ def process_args(args_array, **kwargs):
 
     Arguments:
         (input) args_array -> Array of command line options and values.
-        (output) exit_flag -> True|False - if an error has occurred.
+        (output) status -> True|False - if an error has occurred.
         (output) qry -> Mongo search query criteria.
 
     """
 
     args_array = dict(args_array)
-    exit_flag = False
+    status = False
     qry = {}
 
     # Process key|value pairs.
@@ -229,7 +229,7 @@ def process_args(args_array, **kwargs):
         if key not in args_array and val in args_array:
             print("WARNING: Missing key for value: %s = '%s'"
                   % (val, args_array[val]))
-            exit_flag = True
+            status = True
             break
 
         # -kN option is missing, skip.
@@ -245,12 +245,12 @@ def process_args(args_array, **kwargs):
         except KeyError:
             print("WARNING: Missing value for key: %s = '%s'"
                   % (key, args_array[key]))
-            exit_flag = True
+            status = True
             break
 
         qry[args_array[key]] = sub_qry
 
-    return exit_flag, qry
+    return status, qry
 
 
 def delete_docs(repclu, args_array, **kwargs):
