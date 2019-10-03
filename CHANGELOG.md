@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program:  Fixed problem with mutable default arguments issue.
 
 ### Changed
+- insert_doc:  Removed commented out code.  Not yet implemented.
 - insert_doc:  Changed variables to standard naming convention.
 - process_args:  Changed variable name to be more descriptive of use.
 - delete_docs:  Changed variable name to be more descriptive of use.

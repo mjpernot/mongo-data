@@ -167,7 +167,6 @@ def insert_doc(repclu, args_array, **kwargs):
         can either be an external JSON document(s) or created internally
         and then inserted into the database.  Have the ability to
         insert multiple external JSON document files into the database.
-        NOTE:  Internal creation option is not yet available.
 
     Arguments:
         (input) repclu -> Replication set/cluster instance.
@@ -190,13 +189,6 @@ def insert_doc(repclu, args_array, **kwargs):
                                        val=fname)
             cmds_gen.run_prog(upd_cmd)
             cmd = list(orig_cmd)
-
-    # Internal JSON doc creation.
-    else:
-        print("WARNING:  No code to generate JSON document is available yet.")
-        # outdata = {"Application" : "Mongo Replication - Internal" }
-        # mongo_libs.ins_doc(REPSET, args_array.get("-b"),
-        #                    args_array.get("-t"), outdata, **kwargs)
 
 
 def process_args(args_array, **kwargs):
