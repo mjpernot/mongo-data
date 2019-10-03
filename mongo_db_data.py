@@ -288,9 +288,9 @@ def delete_docs(repclu, args_array, **kwargs):
 
     # Assume -kN and -lN options.
     else:
-        exit_flag, qry = process_args(args_array)
+        status, qry = process_args(args_array)
 
-        if not exit_flag:
+        if not status:
             coll.coll_del_many(qry)
 
     cmds_gen.disconnect([coll])
