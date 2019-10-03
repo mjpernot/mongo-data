@@ -337,6 +337,9 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
+
     svr_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
