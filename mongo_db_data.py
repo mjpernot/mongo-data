@@ -335,8 +335,9 @@ def run_program(args_array, func_dict, **kwargs):
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
     repclu = mongo_class.RepSet(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
-                                svr_cfg.host, svr_cfg.port, svr_cfg.auth,
-                                repset=rep_set, repset_hosts=repset_hosts)
+                                host=svr_cfg.host, port=svr_cfg.port,
+                                auth=svr_cfg.auth, repset=rep_set,
+                                repset_hosts=repset_hosts)
 
     # Intersect args_array and func_dict to determine which functions to call.
     for func in set(args_array.keys()) & set(func_dict.keys()):

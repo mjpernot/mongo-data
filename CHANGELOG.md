@@ -13,6 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - get_repset_name:  Changed a number of arguments from positional to keyword arguments.
 - delete_docs:  Changed a number of arguments from positional to keyword arguments.
 - truncate_coll:  Changed a number of arguments from positional to keyword arguments.
+- run_program:  Changed a number of arguments from positional to keyword arguments.
 
 
 ## [2.0.2] - 2019-10-03
