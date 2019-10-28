@@ -124,9 +124,9 @@ def get_repset_name(svr_cfg, **kwargs):
 
     except AttributeError:
         coll = mongo_class.Coll(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
-                                svr_cfg.host, svr_cfg.port, "local",
-                                "system.replset", svr_cfg.auth,
-                                svr_cfg.conf_file)
+                                host=svr_cfg.host, port=svr_cfg.port,
+                                db="local", coll="system.replset",
+                                auth=svr_cfg.auth, conf_file=svr_cfg.conf_file)
         coll.connect()
 
         # Are there any records.
@@ -263,8 +263,8 @@ def delete_docs(repclu, args_array, **kwargs):
 
     args_array = dict(args_array)
     coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
-                                  repclu.host, repclu.port, repclu.auth,
-                                  repset=repclu.repset,
+                                  host=repclu.host, port=repclu.port,
+                                  auth=repclu.auth, repset=repclu.repset,
                                   repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),

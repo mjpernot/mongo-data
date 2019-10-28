@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - get_repset_name:  Added .connect() call for the connection to the mongo_class.Coll class instance.
+- get_repset_name:  Changed a number of arguments from positional to keyword arguments.
 
 
 ## [2.0.2] - 2019-10-03
