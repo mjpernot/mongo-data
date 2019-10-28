@@ -45,6 +45,7 @@ class Coll2(object):
         __init__ -> Class initialization.
         coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
         coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
+        connect -> Stub holder for mongo_class.Coll.connect method.
 
     """
 
@@ -84,6 +85,18 @@ class Coll2(object):
 
         return {"_id": "UniqueIdentifier"}
 
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub holder for mongo_class.Coll.connect method.
+
+        Arguments:
+
+        """
+
+        return True
+
 
 class Coll(object):
 
@@ -95,6 +108,7 @@ class Coll(object):
         __init__ -> Class initialization.
         coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
         coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
+        connect -> Stub holder for mongo_class.Coll.connect method.
 
     """
 
@@ -133,6 +147,18 @@ class Coll(object):
         """
 
         return {"_id": "RepSetName2"}
+
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub holder for mongo_class.Coll.connect method.
+
+        Arguments:
+
+        """
+
+        return True
 
 
 class UnitTest(unittest.TestCase):
