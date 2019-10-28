@@ -124,13 +124,17 @@ def get_repset_name(svr_cfg, **kwargs):
 
     except AttributeError:
         coll = mongo_class.Coll(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
-                                svr_cfg.host, svr_cfg.port, "local",
-                                "system.replset", svr_cfg.auth,
-                                svr_cfg.conf_file)
+                                host=svr_cfg.host, port=svr_cfg.port,
+                                db="local", coll="system.replset",
+                                auth=svr_cfg.auth, conf_file=svr_cfg.conf_file)
+        coll.connect()
 
         # Are there any records.
         if coll.coll_cnt() != 0:
             rep_set = coll.coll_find1().get("_id")
+
+        else:
+            rep_set = None
 
         cmds_gen.disconnect([coll])
 
@@ -259,8 +263,8 @@ def delete_docs(repclu, args_array, **kwargs):
 
     args_array = dict(args_array)
     coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
-                                  repclu.host, repclu.port, repclu.auth,
-                                  repset=repclu.repset,
+                                  host=repclu.host, port=repclu.port,
+                                  auth=repclu.auth, repset=repclu.repset,
                                   repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
@@ -300,8 +304,8 @@ def truncate_coll(repclu, args_array, **kwargs):
 
     args_array = dict(args_array)
     coll = mongo_class.RepSetColl(repclu.name, repclu.user, repclu.passwd,
-                                  repclu.host, repclu.port, repclu.auth,
-                                  repset=repclu.repset,
+                                  host=repclu.host, port=repclu.port,
+                                  auth=repclu.auth, repset=repclu.repset,
                                   repset_hosts=repclu.repset_hosts,
                                   db=args_array.get("-b"),
                                   coll=args_array.get("-t"),
@@ -331,8 +335,9 @@ def run_program(args_array, func_dict, **kwargs):
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
     repclu = mongo_class.RepSet(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
-                                svr_cfg.host, svr_cfg.port, svr_cfg.auth,
-                                repset=rep_set, repset_hosts=repset_hosts)
+                                host=svr_cfg.host, port=svr_cfg.port,
+                                auth=svr_cfg.auth, repset=rep_set,
+                                repset_hosts=repset_hosts)
 
     # Intersect args_array and func_dict to determine which functions to call.
     for func in set(args_array.keys()) & set(func_dict.keys()):
