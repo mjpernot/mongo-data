@@ -8,6 +8,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Fixed
 - get_repset_name:  Set repset variable to None if no database record is found.
 
+### Changed
+- get_repset_name:  Added .connect() call for the connection to the mongo_class.Coll class instance.
+
 
 ## [2.0.2] - 2019-10-03
 ### Fixed

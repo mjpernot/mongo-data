@@ -127,6 +127,7 @@ def get_repset_name(svr_cfg, **kwargs):
                                 svr_cfg.host, svr_cfg.port, "local",
                                 "system.replset", svr_cfg.auth,
                                 svr_cfg.conf_file)
+        coll.connect()
 
         # Are there any records.
         if coll.coll_cnt() != 0:
