@@ -225,7 +225,6 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.cfg2 = CfgTest2()
 
-    @unittest.skip("Bug:  repset not set if no record found in Mongo db")
     @mock.patch("mongo_db_data.cmds_gen.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
     def test_no_repset_name(self, mock_coll, mock_disconnect):
