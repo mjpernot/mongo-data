@@ -132,6 +132,9 @@ def get_repset_name(svr_cfg, **kwargs):
         if coll.coll_cnt() != 0:
             rep_set = coll.coll_find1().get("_id")
 
+        else:
+            rep_set = None
+
         cmds_gen.disconnect([coll])
 
     return rep_set
