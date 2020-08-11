@@ -59,7 +59,8 @@ class Coll2(object):
 
         """
 
-        pass
+        self.cnt = 0
+        self.find = {"_id": "UniqueIdentifier"}
 
     def coll_cnt(self):
 
@@ -71,7 +72,7 @@ class Coll2(object):
 
         """
 
-        return 0
+        return self.cnt
 
     def coll_find1(self):
 
@@ -83,7 +84,7 @@ class Coll2(object):
 
         """
 
-        return {"_id": "UniqueIdentifier"}
+        return self.find
 
     def connect(self):
 
@@ -122,7 +123,8 @@ class Coll(object):
 
         """
 
-        pass
+        self.cnt = 1
+        self.find = {"_id": "RepSetName2"}
 
     def coll_cnt(self):
 
@@ -134,7 +136,7 @@ class Coll(object):
 
         """
 
-        return 1
+        return self.cnt
 
     def coll_find1(self):
 
@@ -146,7 +148,7 @@ class Coll(object):
 
         """
 
-        return {"_id": "RepSetName2"}
+        return self.find
 
     def connect(self):
 
@@ -250,6 +252,8 @@ class UnitTest(unittest.TestCase):
 
         self.cfg = CfgTest()
         self.cfg2 = CfgTest2()
+        self.coll = Coll()
+        self.coll2 = Coll2()
 
     @mock.patch("mongo_db_data.cmds_gen.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
@@ -263,7 +267,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = Coll2()
+        mock_coll.return_value = self.coll2
         mock_disconnect.return_value = True
 
         self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
@@ -280,7 +284,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = Coll()
+        mock_coll.return_value = self.coll
         mock_disconnect.return_value = True
 
         self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),

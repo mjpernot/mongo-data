@@ -47,7 +47,12 @@ def insert_doc(repset, args_array, **kwargs):
 
     """
 
-    return True
+    status = True
+
+    if repset and args_array:
+        status = True
+
+    return status
 
 
 class RepSet(object):

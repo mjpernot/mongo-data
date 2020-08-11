@@ -58,7 +58,8 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = None
+        self.override = None
 
     def connect(self):
 
@@ -84,7 +85,8 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = query
+        self.override = override
 
 
 class UnitTest(unittest.TestCase):
@@ -143,6 +145,7 @@ class UnitTest(unittest.TestCase):
                 self.repset_hosts = ["List of hosts"]
 
         self.repset = RepSetCfg()
+        self.repcoll = RepSetColl()
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
 
@@ -158,7 +161,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = RepSetColl()
+        mock_coll.return_value = self.repcoll
         mock_disconnect.return_value = True
 
         self.assertFalse(mongo_db_data.truncate_coll(self.repset,

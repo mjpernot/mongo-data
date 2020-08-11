@@ -58,7 +58,7 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = None
 
     def connect(self):
 
@@ -83,7 +83,7 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = query
 
 
 class UnitTest(unittest.TestCase):
@@ -144,6 +144,7 @@ class UnitTest(unittest.TestCase):
                 self.repset_hosts = ["List of hosts"]
 
         self.repset = RepSetCfg()
+        self.repcoll = RepSetColl()
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
         self.args_array2 = {"-b": "databasename", "-t": "tablename",
@@ -162,7 +163,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = RepSetColl()
+        mock_coll.return_value = self.repcoll
         mock_lib.file_2_list.return_value = ["File1"]
         mock_lib.str_2_type.return_value = {"query"}
         mock_disconnect.return_value = True
@@ -184,7 +185,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = RepSetColl()
+        mock_coll.return_value = self.repcoll
         mock_proc.return_value = (False, {"Query"})
         mock_disconnect.return_value = True
 
@@ -204,7 +205,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = RepSetColl()
+        mock_coll.return_value = self.repcoll
         mock_proc.return_value = (False, {"Query"})
         mock_disconnect.return_value = True
 
