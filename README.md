@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  This program is used to take an external JSON document and insert into a Mongo database, delete a document from a Mongo database collection based on passed key(s) and value(s), or truncate a collection within a Mongo database.
+  Used to take an external JSON document and insert into a Mongo database, delete a document from a Mongo database collection based on passed key(s) and value(s), or truncate a collection within a Mongo database.
 
 
 ###  This README file is broken down into the following sections:
@@ -23,8 +23,6 @@
 # Prerequisites:
 
   * List of Linux packages that need to be installed on the server.
-    - python-libs
-    - python-devel
     - git
     - python-pip
 
@@ -67,17 +65,15 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 # Configuration:
 
 Create Mongodb configuration file.
-```
-cd config
-cp mongo.py.TEMPLATE mongo.py
-```
-
 Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
     - user = "USER"
     - passwd = "PASSWORD"
     - host = "IP_ADDRESS"
     - name = "HOSTNAME"
+    - port = 27017
+    - conf_file = None
+    - auth = True
 
   * If connecting to a Mongo replica set, otherwise set to None.
     - repset = "REPLICA_SET_NAME"
@@ -85,6 +81,8 @@ Make the appropriate change to the environment.
     - db_auth = "AUTHENTICATION_DATABASE"
 
 ```
+cd config
+cp mongo.py.TEMPLATE mongo.py
 vim mongo.py
 chmod 600 mongo.py
 ```
@@ -102,10 +100,7 @@ chmod 600 mongo.py
 
 # Testing:
 
-
 # Unit Testing:
-
-### Description: Testing consists of unit testing for the functions in the mongo_db_data.py program.
 
 ### Installation:
 
@@ -138,29 +133,18 @@ pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host
 ```
 
 
-# Unit test runs for mongo_db_data.py:
+### Testing:
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd {Python_Project}/mongo-data
-test/unit/mongo_db_data/delete_docs.py
-test/unit/mongo_db_data/get_repset_hosts.py
-test/unit/mongo_db_data/get_repset_name.py
-test/unit/mongo_db_data/help_message.py
-test/unit/mongo_db_data/insert_doc.py
-test/unit/mongo_db_data/main.py
-test/unit/mongo_db_data/process_args.py
-test/unit/mongo_db_data/run_program.py
-test/unit/mongo_db_data/truncate_coll.py
-```
-
-### All unit testing
-```
 test/unit/mongo_db_data/unit_test_run.sh
 ```
 
-### Code coverage program
+### Code coverage:
+
 ```
+cd {Python_Project}/mongo-data
 test/unit/mongo_db_data/code_coverage.sh
 ```
 
