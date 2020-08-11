@@ -94,6 +94,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_multiple_lines -> Test with multiple lines per file passed.
+        test_multiple_files -> Test with multiple files passed.
+        test_empty_file -> Test with empty file.
         test_file_list -> Test with file list passed.
         test_no_list_error -> Test with no file list passed, but with error.
         test_no_file_list -> Test with no file list passed.
@@ -149,6 +152,70 @@ class UnitTest(unittest.TestCase):
                            "-a": "authdatabase"}
         self.args_array2 = {"-b": "databasename", "-t": "tablename",
                             "-a": "authdatabase", "-f": ["file1"]}
+        self.args_array3 = {"-b": "databasename", "-t": "tablename",
+                            "-a": "authdatabase", "-f": ["file1", "file2"]}
+
+    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.gen_libs")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_multiple_lines(self, mock_coll, mock_lib, mock_disconnect):
+
+        """Function:  test_multiple_lines
+
+        Description:  Test with multiple lines per file passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.repcoll
+        mock_lib.file_2_list.return_value = ["file1", "file2"]
+        mock_lib.str_2_type.return_value = {"query"}
+        mock_disconnect.return_value = True
+
+        self.assertFalse(mongo_db_data.delete_docs(self.repset,
+                                                   self.args_array2))
+
+    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.gen_libs")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_multiple_files(self, mock_coll, mock_lib, mock_disconnect):
+
+        """Function:  test_multiple_files
+
+        Description:  Test with multiple files passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.repcoll
+        mock_lib.file_2_list.return_value = ["file1", "file2"]
+        mock_lib.str_2_type.return_value = {"query"}
+        mock_disconnect.return_value = True
+
+        self.assertFalse(mongo_db_data.delete_docs(self.repset,
+                                                   self.args_array3))
+
+    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.gen_libs")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_empty_file(self, mock_coll, mock_lib, mock_disconnect):
+
+        """Function:  test_empty_file
+
+        Description:  Test with file list passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.repcoll
+        mock_lib.file_2_list.return_value = []
+        mock_disconnect.return_value = True
+
+        self.assertFalse(mongo_db_data.delete_docs(self.repset,
+                                                   self.args_array2))
 
     @mock.patch("mongo_db_data.cmds_gen.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
@@ -170,7 +237,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array2))
-
 
     @mock.patch("mongo_db_data.cmds_gen.disconnect")
     @mock.patch("mongo_db_data.process_args")
