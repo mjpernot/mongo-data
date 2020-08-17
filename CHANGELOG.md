@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.1] - 2020-08-17
+
+
 ## [2.1.0] - 2019-10-28
 ### Fixed
 - get_repset_name:  Set repset variable to None if no database record is found.
