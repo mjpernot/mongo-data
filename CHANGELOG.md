@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.1.1] - 2020-08-17
+### Fixed
+- main:  Fixed handling command line arguments from SonarQube scan finding.
+
 ### Changed
 - Documentation updates.
 

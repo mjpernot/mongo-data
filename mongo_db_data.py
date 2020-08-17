@@ -375,6 +375,7 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     file_chk_list = ["-f"]
     func_dict = {"-I": insert_doc, "-D": delete_docs, "-T": truncate_coll}
@@ -390,7 +391,7 @@ def main():
     xor_noreq_list = {"-k1": "-f"}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list,
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
                                        multi_val=opt_multi_list)
 
     # Remove dupe files.
