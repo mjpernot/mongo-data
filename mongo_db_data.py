@@ -9,27 +9,30 @@
         collection within a Mongo database.
 
     Usage:
-        mongo_db_data.py -c file -d path [-I {-f [file | file*]} |
-            -D {[-b name | -t name | -k1 "key_name" | -l1 "value1"
-            {"value2" "value3" ...}
-            {-k2 "key_name" | -l2 "value1" {"value2" "value3" ...} ...] |
-            -f [file | file*] }
-            | -T [-b name | -t name]] {-a name | -p path} [-v | -h]
+        mongo_db_data.py -c cfg_file -d path -b db_name -t coll_name
+            {-I -f {path/file | path/file*} |
+            -D {-k1 "key" -l1 "value1" ["value2" "value3" ...]
+                [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
+                [-f {path/file | path/file*}]} |
+            -T}
+            [-a name] [-p path}
+            [-v | -h]
 
     Arguments:
-        -c file => Mongo configuration file.  Required arg.
+        -c cfg_file => Mongo configuration file.  Required arg.
         -d dir path => Config directory path.  Required arg.
-        -T => Truncate collection in database.
+        -b db_name => Database Name.  Required arg.
+        -t coll_name => Collection Name.  Required arg.
         -I => Insert JSON document into database.
+        -f file(s) => JSON Document to be inserted for -I option.
+            Requires absolute directory_path/file_name.
         -D => Delete JSON document from database.
-        -k[1-5] key_name => Name of key in document to delete on.
+        -k[1-5] key => Name of key in document to delete on.
         -l[1-5] value(s) => One or more values for associated key.
             values are enclosed in quotes (") and space-delimited ( ).
-        -b name => Database Name.  Required arg.
-        -t name => Collection Name.  Required arg.
-        -f file(s) => JSON Document to be inserted for -I option or
-            search criteria for -D option.  Requires full
-            Directory Path/File Name.
+        -f file(s) => JSON Document for delete search criteria for -D option.
+            Requires absolute directory_path/file_name.
+        -T => Truncate collection in database.
         -a name => Authentication Database Name.  Required for accounts
             not in database (-b).
         -p => Path to Mongo binaries.  Only required if the user
@@ -38,30 +41,33 @@
         -h => Help and usage message.
 
         NOTE 1:  -v and/or -h overrides all other options.
-
         NOTE 2:  -I and -D are XOR options.
-
-        NOTE 3:  -k1 and -l1 are required for -D option.  -k[2-5] and
-            -l[2-5] are optional, but are required to be paired.
+        NOTE 3:  -k1 and -l1 are required to be paried for -D option.
+            -k[2-5] and -l[2-5] are optional, but are required to be paired.
 
     Notes:
-        Mongo configuration file format (mongo.py).  The configuration
-            file format for the Mongo connection used for inserting data into
-            a database.  There are two ways to connect:  single or replica set.
+        Mongo configuration file format (config/mongo.py.TEMPLATE).  The
+            configuration file format for the Mongo connection used for
+            inserting data into a database.
+
+            There are two ways to connect:  single or replica set.
 
             1.)  Single database connection:
 
             # Single Configuration file for Mongo Database Server.
-            user = "root"
-            passwd = "ROOT_PASSWORD"
+            user = "USER"
+            passwd = "PASSWORD"
             host = "IP_ADDRESS"
             name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 27017)
+            # Default port for Mongodb is 27017.
+            port = 27017
             conf_file = None
             auth = True
 
             2.)  Replica Set connection:  Same format as above, but with these
-                additional entries at the end of the configuration file:
+                additional entries at the end of the configuration file.  By
+                default all these entries are set to None to represent not
+                connecting to a replica set.
 
             repset = "REPLICA_SET_NAME"
             repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
