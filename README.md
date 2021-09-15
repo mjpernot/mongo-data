@@ -28,11 +28,8 @@
     - python-devel
 
   * Local class/library dependencies within the program structure.
-    - lib/arg_parser
-    - lib/gen_libs
-    - lib/cmds_gen
-    - mongo_lib/mongo_class
-    - mongo_lib/mongo_libs
+    - python-lib
+    - mongo-lib
 
 
 # Installation:
