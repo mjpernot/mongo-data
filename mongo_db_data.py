@@ -9,30 +9,39 @@
         collection within a Mongo database.
 
     Usage:
-        mongo_db_data.py -c cfg_file -d path -b db_name -t coll_name
-            {-I -f {path/file | path/file*} |
-            -D {-k1 "key" -l1 "value1" ["value2" "value3" ...]
-                [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
-                [-f {path/file | path/file*}]} |
-            -T}
+        mongo_db_data.py -c cfg_file -d path
+            {-I -b db_name -t coll_name -f {path/file | path/file*} |
+             -D -b db_name -t coll_name
+                {-k1 "key" -l1 "value1" ["value2" "value3" ...]
+                 [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
+                 [-f {path/file | path/file*}]} |
+             -T -b db_name -t coll_name}
             [-a name] [-p path}
             [-v | -h]
 
     Arguments:
         -c cfg_file => Mongo configuration file.  Required arg.
         -d dir path => Config directory path.  Required arg.
-        -b db_name => Database Name.  Required arg.
-        -t coll_name => Collection Name.  Required arg.
+
         -I => Insert JSON document into database.
-        -f file(s) => JSON Document to be inserted for -I option.
-            Requires absolute directory_path/file_name.
+            -b db_name => Database Name.
+            -t coll_name => Collection Name.
+            -f file(s) => JSON document to be inserted.  Requires absolute
+                path.
+
         -D => Delete JSON document from database.
-        -k[1-5] key => Name of key in document to delete on.
-        -l[1-5] value(s) => One or more values for associated key.
-            values are enclosed in quotes (") and space-delimited ( ).
-        -f file(s) => JSON Document for delete search criteria for -D option.
-            Requires absolute directory_path/file_name.
+            -b db_name => Database Name.
+            -t coll_name => Collection Name.
+            -k[1-5] key => Name of key in document to delete on.
+            -l[1-5] value(s) => One or more values for associated key.
+                Values are enclosed in quotes (") and space-delimited ( ).
+            -f file(s) => JSON Document for delete search criteria.  Requires
+                 absolute path.
+
         -T => Truncate collection in database.
+            -b db_name => Database Name.
+            -t coll_name => Collection Name.
+
         -a name => Authentication Database Name.  Required for accounts
             not in database (-b).
         -p => Path to Mongo binaries.  Only required if the user
