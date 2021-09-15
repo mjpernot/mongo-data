@@ -42,10 +42,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_empty_list -> Test with empty list passed.
-        test_insert_doc -> Test with passing files to function.
-        test_no_files -> Test with no -f option passed.
+        setUp
+        test_empty_list
+        test_insert_doc
+        test_no_files
 
     """
 
