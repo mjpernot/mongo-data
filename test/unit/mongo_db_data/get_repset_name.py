@@ -42,10 +42,10 @@ class Coll2(object):
     Description:  Class stub holder for mongo_class.Coll class.
 
     Methods:
-        __init__ -> Class initialization.
-        coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
-        coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
-        connect -> Stub holder for mongo_class.Coll.connect method.
+        __init__
+        coll_cnt
+        coll_find1
+        connect
 
     """
 
@@ -106,10 +106,10 @@ class Coll(object):
     Description:  Class stub holder for mongo_class.Coll class.
 
     Methods:
-        __init__ -> Class initialization.
-        coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
-        coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
-        connect -> Stub holder for mongo_class.Coll.connect method.
+        __init__
+        coll_cnt
+        coll_find1
+        connect
 
     """
 
@@ -170,10 +170,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_repset_name -> Test with no repset name found.
-        test_mongo_repset_name -> Test with Mongo db setting repset name.
-        test_cfg_repset_name -> Test with cfg module setting repset name.
+        setUp
+        test_no_repset_name
+        test_mongo_repset_name
+        test_cfg_repset_name
 
     """
 
@@ -194,7 +194,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a cfg module.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -210,7 +210,7 @@ class UnitTest(unittest.TestCase):
 
                 self.name = "MongoName"
                 self.user = "root"
-                self.passwd = None
+                self.japd = None
                 self.host = "HostName"
                 self.port = 27017
                 self.db = "test"
@@ -225,7 +225,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a cfg module.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -241,7 +241,7 @@ class UnitTest(unittest.TestCase):
 
                 self.name = "MongoName"
                 self.user = "root"
-                self.passwd = None
+                self.japd = None
                 self.host = "HostName"
                 self.port = 27017
                 self.db = "test"
