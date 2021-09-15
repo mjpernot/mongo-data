@@ -61,13 +61,9 @@ class RepSet(object):
 
     Description:  Class stub holder for mongo_class.RepSet class.
 
-    Super-Class:
-
-    Sub-Classes:
-
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub holder for mongo_class.RepSet.connect method.
+        __init__
+        connect
 
     """
 
@@ -90,13 +86,10 @@ class UnitTest(unittest.TestCase):
 
     Description:  Class which is a representation of a unit testing.
 
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_run_program -> Test run_program function.
+        setUp
+        test_run_program
 
     """
 
@@ -117,7 +110,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a cfg module.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -133,7 +126,7 @@ class UnitTest(unittest.TestCase):
 
                 self.name = "MongoName"
                 self.user = "root"
-                self.passwd = None
+                self.japd = None
                 self.host = "HostName"
                 self.port = 27017
                 self.db = "test"
