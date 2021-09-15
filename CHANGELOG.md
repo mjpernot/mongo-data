@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- config/mongo.py.TEMPLATE:  Added SSL entries and auth_db entry.
 - Documentation updates.
 
 
