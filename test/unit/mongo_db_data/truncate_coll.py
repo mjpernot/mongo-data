@@ -42,9 +42,9 @@ class RepSetColl(object):
     Description:  Class stub holder for mongo_class.RepSetColl class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub holder for mongo_class.RepSetColl.connect method.
-        coll_del_many -> Stub holder for mongo_class.RepSetColl.coll_del_many.
+        __init__
+        connect
+        coll_del_many
 
     """
 
@@ -96,8 +96,8 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_truncate_coll -> Test truncate_coll method.
+        setUp
+        test_truncate_coll
 
     """
 
@@ -118,7 +118,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a RepSet class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -134,7 +134,7 @@ class UnitTest(unittest.TestCase):
 
                 self.name = "MongoName"
                 self.user = "root"
-                self.passwd = None
+                self.japd = None
                 self.host = "HostName"
                 self.port = 27017
                 self.db = "test"
