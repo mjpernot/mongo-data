@@ -46,23 +46,23 @@ class UnitTest(unittest.TestCase):
     Sub-Classes:
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_help_true -> Test help if returns true.
-        test_help_false -> Test help if returns false.
-        test_arg_req_true -> Test arg_require if returns true.
-        test_arg_req_false -> Test arg_require if returns false.
-        test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns true.
-        test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns false.
-        test_arg_xor_dict_false -> Test arg_xor_dict if returns false.
-        test_arg_xor_dict_true -> Test arg_xor_dict if returns true.
-        test_arg_cond_req_false -> Test arg_cond_req if returns false.
-        test_arg_cond_req_true -> Test arg_cond_req if returns true.
-        test_arg_noreq_xor_false -> Test arg_noreq_xor if returns false.
-        test_arg_noreq_xor_true -> Test arg_noreq_xor if returns true.
-        test_arg_file_chk_true -> Test arg_file_chk if returns true.
-        test_arg_file_chk_false -> Test arg_file_chk if returns false.
-        test_process_f_option -> Test with processing -f option.
-        test_run_program -> Test with run_program.
+        setUp
+        test_help_true
+        test_help_false
+        test_arg_req_true
+        test_arg_req_false
+        test_arg_dir_chk_crt_true
+        test_arg_dir_chk_crt_false
+        test_arg_xor_dict_false
+        test_arg_xor_dict_true
+        test_arg_cond_req_false
+        test_arg_cond_req_true
+        test_arg_noreq_xor_false
+        test_arg_noreq_xor_true
+        test_arg_file_chk_true
+        test_arg_file_chk_false
+        test_process_f_option
+        test_run_program
 
     """
 
