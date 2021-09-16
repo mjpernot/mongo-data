@@ -89,6 +89,41 @@ class RepSetColl(object):
         self.override = override
 
 
+class RepSetCfg(object):
+
+    """Class:  RepSetCfg
+
+    Description:  Class which is a representation of a RepSet class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.db = "test"
+        self.coll = "CollectionName"
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.repset = "RepSetName"
+        self.repset_hosts = ["List of hosts"]
+        self.auth_mech = "SCRAM-SHA-1"
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -110,39 +145,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class RepSetCfg(object):
-
-            """Class:  RepSetCfg
-
-            Description:  Class which is a representation of a RepSet class.
-
-            Methods:
-                __init__
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.japd = None
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-                self.repset = "RepSetName"
-                self.repset_hosts = ["List of hosts"]
 
         self.repset = RepSetCfg()
         self.repcoll = RepSetColl()
