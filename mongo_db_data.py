@@ -182,7 +182,7 @@ def get_repset_name(svr_cfg, **kwargs):
         else:
             rep_set = None
 
-        cmds_gen.disconnect([coll])
+        mongo_libs.disconnect([coll])
 
     return rep_set
 
