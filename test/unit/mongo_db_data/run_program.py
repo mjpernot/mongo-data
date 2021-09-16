@@ -111,6 +111,8 @@ class CfgTest(object):
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
+        self.use_arg = True
+        self.use_uri = False
 
 
 class CfgTest2(object):
@@ -145,6 +147,8 @@ class CfgTest2(object):
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
         self.auth_mech = "SCRAM-SHA-1"
+        self.use_arg = True
+        self.use_uri = False
 
 
 class UnitTest(unittest.TestCase):
