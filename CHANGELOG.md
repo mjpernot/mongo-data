@@ -11,6 +11,7 @@ Breaking Change
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- run_program:  Added use_arg and use_uri to mongo_class instance call.
 - truncate_coll, delete_docs:  Added auth_mech to mongo_class instance call.
 - get_repset_name, run_program:  Processed and added auth_mech to the mongo_class instance call.
 - Removed unneccessary \*\*kwargs from arguments lists.

@@ -400,7 +400,8 @@ def run_program(args_array, func_dict, **kwargs):
     repclu = mongo_class.RepSet(
         svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
-        repset_hosts=repset_hosts, **auth_mech)
+        repset_hosts=repset_hosts, use_arg=svr_cfg.use_arg,
+        use_uri=svr_cfg.use_uri,**auth_mech)
 
     # Intersect args_array and func_dict to determine which functions to call.
     for func in set(args_array.keys()) & set(func_dict.keys()):
