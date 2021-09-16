@@ -322,6 +322,7 @@ def delete_docs(repclu, args_array, **kwargs):
         port=repclu.port, auth=repclu.auth, repset=repclu.repset,
         repset_hosts=repclu.repset_hosts, db=args_array.get("-b"),
         coll=args_array.get("-t"), db_auth=args_array.get("-a", None),
+        use_arg=repclu.use_arg, use_uri=repclu.use_uri,
         auth_mech=repclu.auth_mech)
     coll.connect()
 
