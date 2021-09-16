@@ -163,6 +163,104 @@ class Coll(object):
         return True
 
 
+class CfgTest(object):
+
+    """Class:  CfgTest
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.db = "test"
+        self.coll = "CollectionName"
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.repset = "RepSetName"
+
+
+class CfgTest2(object):
+
+    """Class:  CfgTest2
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.db = "test"
+        self.coll = "CollectionName"
+        self.auth = True
+        self.conf_file = "ConFile"
+
+
+class CfgTest3(object):
+
+    """Class:  CfgTest3
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.db = "test"
+        self.coll = "CollectionName"
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.auth_mech = "SCRAM-SHA-1"
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -171,6 +269,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_auth_mech
+        test_no_auth_mech
         test_no_repset_name
         test_mongo_repset_name
         test_cfg_repset_name
@@ -187,73 +287,47 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class CfgTest2(object):
-
-            """Class:  CfgTest2
-
-            Description:  Class which is a representation of a cfg module.
-
-            Methods:
-                __init__
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.japd = None
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-
-        class CfgTest(object):
-
-            """Class:  CfgTest
-
-            Description:  Class which is a representation of a cfg module.
-
-            Methods:
-                __init__
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.japd = None
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-                self.repset = "RepSetName"
-
         self.cfg = CfgTest()
         self.cfg2 = CfgTest2()
+        self.cfg3 = CfgTest3()
         self.coll = Coll()
         self.coll2 = Coll2()
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_auth_mech(self, mock_coll, mock_disconnect):
+
+        """Function:  test_auth_mech
+
+        Description:  Test with auth_mech passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg3),
+                         "RepSetName2")
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_no_auth_mech(self, mock_coll, mock_disconnect):
+
+        """Function:  test_no_auth_mech
+
+        Description:  Test with no auth_mech passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),
+                         "RepSetName2")
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
