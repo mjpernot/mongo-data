@@ -331,7 +331,7 @@ def delete_docs(repclu, args_array, **kwargs):
         if not status:
             coll.coll_del_many(qry)
 
-    cmds_gen.disconnect([coll])
+    mongo_libs.disconnect([coll])
 
 
 def truncate_coll(repclu, args_array, **kwargs):
