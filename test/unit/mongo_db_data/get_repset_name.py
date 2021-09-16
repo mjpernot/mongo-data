@@ -255,7 +255,7 @@ class UnitTest(unittest.TestCase):
         self.coll = Coll()
         self.coll2 = Coll2()
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
     def test_no_repset_name(self, mock_coll, mock_disconnect):
 
@@ -272,7 +272,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
     def test_mongo_repset_name(self, mock_coll, mock_disconnect):
 
