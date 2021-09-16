@@ -149,7 +149,7 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_truncate_coll(self, mock_coll, mock_disconnect):
 
