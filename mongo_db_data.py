@@ -169,10 +169,10 @@ def get_repset_name(svr_cfg, **kwargs):
         rep_set = svr_cfg.repset
 
     except AttributeError:
-        coll = mongo_class.Coll(svr_cfg.name, svr_cfg.user, svr_cfg.passwd,
-                                host=svr_cfg.host, port=svr_cfg.port,
-                                db="local", coll="system.replset",
-                                auth=svr_cfg.auth, conf_file=svr_cfg.conf_file)
+        coll = mongo_class.Coll(
+            svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
+            port=svr_cfg.port, db="local", coll="system.replset",
+            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file)
         coll.connect()
 
         # Are there any records.
