@@ -356,7 +356,7 @@ def truncate_coll(repclu, args_array, **kwargs):
 
     # Require override option.
     coll.coll_del_many({}, True)
-    cmds_gen.disconnect([coll])
+    mongo_libs.disconnect([coll])
 
 
 def run_program(args_array, func_dict, **kwargs):
