@@ -119,6 +119,8 @@ class RepSetCfg(object):
         self.repset = "RepSetName"
         self.repset_hosts = ["List of hosts"]
         self.auth_mech = "SCRAM-SHA-1"
+        self.use_arg = True
+        self.use_uri = False
 
 
 class UnitTest(unittest.TestCase):
