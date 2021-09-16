@@ -176,7 +176,8 @@ def get_repset_name(svr_cfg):
         coll = mongo_class.Coll(
             svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
             port=svr_cfg.port, db="local", coll="system.replset",
-            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file, **auth_mech)
+            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
+            use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri, **auth_mech)
         coll.connect()
 
         # Are there any records.
