@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- Removed unneccessary \*\*kwargs from arguments lists.
 - truncate_coll, delete_docs, get_repset_name:  Replaced cmds_gen.disconnect call with mongo_libs.disconnect.
 - run_program, truncate_coll, delete_docs, get_repset_name:  Update configuration entries to match new config file.
 - config/mongo.py.TEMPLATE:  Added SSL entries and auth_db entry.

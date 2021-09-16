@@ -152,7 +152,7 @@ def help_message():
     print(__doc__)
 
 
-def get_repset_name(svr_cfg, **kwargs):
+def get_repset_name(svr_cfg):
 
     """Function:  get_repset_name
 
@@ -187,7 +187,7 @@ def get_repset_name(svr_cfg, **kwargs):
     return rep_set
 
 
-def get_repset_hosts(svr_cfg, **kwargs):
+def get_repset_hosts(svr_cfg):
 
     """Function:  get_repset_hosts
 
@@ -221,8 +221,9 @@ def insert_doc(repclu, args_array, **kwargs):
     Arguments:
         (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            opt_rep -> Dictionary of replaceable arguments for each run.
+        (input) kwargs:
+            opt_arg -> Contains list of optional arguments for command line.
+            opt_rep -> Contains list of replaceable arguments for command line.
 
     """
 
@@ -241,7 +242,7 @@ def insert_doc(repclu, args_array, **kwargs):
             cmd = list(orig_cmd)
 
 
-def process_args(args_array, **kwargs):
+def process_args(args_array):
 
     """Function:  process_args
 
@@ -260,9 +261,9 @@ def process_args(args_array, **kwargs):
     qry = {}
 
     # Process key|value pairs.
-    for x in range(1, 6):
-        key = "-k" + str(x)
-        val = "-l" + str(x)
+    for item in range(1, 6):
+        key = "-k" + str(item)
+        val = "-l" + str(item)
 
         # Missing -kN, but have -lN.
         if key not in args_array and val in args_array:
@@ -304,6 +305,9 @@ def delete_docs(repclu, args_array, **kwargs):
     Arguments:
         (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            opt_arg -> Contains list of optional arguments for command line.
+            opt_rep -> Contains list of replaceable arguments for command line.
 
     """
 
@@ -343,6 +347,9 @@ def truncate_coll(repclu, args_array, **kwargs):
     Arguments:
         (input) repclu -> Replication set/cluster instance.
         (input) args_array -> Array of command line options and values.
+        (input) kwargs:
+            opt_arg -> Contains list of optional arguments for command line.
+            opt_rep -> Contains list of replaceable arguments for command line.
 
     """
 
@@ -368,6 +375,9 @@ def run_program(args_array, func_dict, **kwargs):
     Arguments:
         (input) args_array -> Dict of command line options and values.
         (input) func_dict -> Dictionary list of functions and options.
+        (input) kwargs:
+            opt_arg -> Contains list of optional arguments for command line.
+            opt_rep -> Contains list of replaceable arguments for command line.
 
     """
 
