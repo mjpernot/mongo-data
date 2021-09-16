@@ -165,6 +165,10 @@ def get_repset_name(svr_cfg):
 
     """
 
+    # Only pass authorization mechanism if present.
+    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
+        svr_cfg, "auth_mech") else {}
+
     try:
         rep_set = svr_cfg.repset
 
@@ -172,7 +176,7 @@ def get_repset_name(svr_cfg):
         coll = mongo_class.Coll(
             svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
             port=svr_cfg.port, db="local", coll="system.replset",
-            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file)
+            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file, **auth_mech)
         coll.connect()
 
         # Are there any records.
