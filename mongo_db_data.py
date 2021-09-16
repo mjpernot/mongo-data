@@ -363,7 +363,8 @@ def truncate_coll(repclu, args_array, **kwargs):
         repclu.name, repclu.user, repclu.japd, host=repclu.host,
         port=repclu.port, auth=repclu.auth, repset=repclu.repset,
         repset_hosts=repclu.repset_hosts, db=args_array.get("-b"),
-        coll=args_array.get("-t"), db_auth=args_array.get("-a", None))
+        coll=args_array.get("-t"), db_auth=args_array.get("-a", None),
+        auth_mech=repclu.auth_mech)
     coll.connect()
 
     # Require override option.
