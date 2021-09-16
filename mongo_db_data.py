@@ -386,10 +386,15 @@ def run_program(args_array, func_dict, **kwargs):
     svr_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
+
+    # Only pass authorization mechanism if present.
+    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
+        svr_cfg, "auth_mech") else {}
+
     repclu = mongo_class.RepSet(
         svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
-        repset_hosts=repset_hosts)
+        repset_hosts=repset_hosts, **auth_mech)
 
     # Intersect args_array and func_dict to determine which functions to call.
     for func in set(args_array.keys()) & set(func_dict.keys()):

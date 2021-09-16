@@ -11,6 +11,7 @@ Breaking Change
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- run_program:  Processed and added auth_mech to the mongo_class instance call.
 - Removed unneccessary \*\*kwargs from arguments lists.
 - truncate_coll, delete_docs, get_repset_name:  Replaced cmds_gen.disconnect call with mongo_libs.disconnect.
 - run_program, truncate_coll, delete_docs, get_repset_name:  Update configuration entries to match new config file.
