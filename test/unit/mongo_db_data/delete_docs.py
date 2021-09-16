@@ -155,7 +155,7 @@ class UnitTest(unittest.TestCase):
         self.args_array3 = {"-b": "databasename", "-t": "tablename",
                             "-a": "authdatabase", "-f": ["file1", "file2"]}
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_multiple_lines(self, mock_coll, mock_lib, mock_disconnect):
@@ -176,7 +176,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array2))
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_multiple_files(self, mock_coll, mock_lib, mock_disconnect):
@@ -197,7 +197,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array3))
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_empty_file(self, mock_coll, mock_lib, mock_disconnect):
@@ -217,7 +217,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array2))
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_file_list(self, mock_coll, mock_lib, mock_disconnect):
@@ -238,7 +238,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array2))
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.process_args")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_no_list_error(self, mock_coll, mock_proc, mock_disconnect):
@@ -258,7 +258,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.delete_docs(self.repset,
                                                    self.args_array))
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.process_args")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_no_file_list(self, mock_coll, mock_proc, mock_disconnect):
