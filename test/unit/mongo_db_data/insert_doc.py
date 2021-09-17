@@ -35,6 +35,43 @@ import version
 __version__ = version.__version__
 
 
+class SubProcess(object):
+
+    """Class:  SubProcess
+
+    Description:  Class which is a representation of the subprocess class.
+
+    Methods:
+        __init__
+        wait
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the ZipFile class.
+
+        Arguments:
+
+        """
+
+        pass
+
+    def wait(self):
+
+        """Method:  wait
+
+        Description:  Mock representation of subprocess.wait method.
+
+        Arguments:
+
+        """
+
+        pass
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -59,6 +96,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.subproc = SubProcess()
         self.opt_rep = {"-f": "--file="}
         self.repset = "RepSetInstance"
         self.args_array = {"-f": ["File1"]}
@@ -77,9 +115,10 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.insert_doc(self.repset,
                                                   self.args_array2))
 
-    @mock.patch("mongo_db_data.cmds_gen")
+    @mock.patch("mongo_db_data.cmds_gen.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
     @mock.patch("mongo_db_data.mongo_libs.create_cmd")
-    def test_insert_doc(self, mock_cmd, mock_gen):
+    def test_insert_doc(self, mock_cmd, mock_open, mock_add):
 
         """Function:  test_insert_doc
 
@@ -90,12 +129,12 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["Command", "List"]
-        mock_gen.add_cmd.return_value = ["Command", "List", "Updated"]
-        mock_gen.run_prog.return_value = True
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
 
-        self.assertFalse(mongo_db_data.insert_doc(self.repset,
-                                                  self.args_array,
-                                                  opt_rep=self.opt_rep))
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repset, self.args_array, opt_rep=self.opt_rep))
 
     def test_no_files(self):
 
