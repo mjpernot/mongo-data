@@ -202,7 +202,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.get_repset_hosts")
     @mock.patch("mongo_db_data.get_repset_name")
     @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_connection_fail(self, mock_repset, mock_name, mock_hosts, mock_load):
+    def test_connection_fail(self, mock_repset, mock_name, mock_hosts,
+                             mock_load):
 
         """Function:  test_connection_fail
 
@@ -230,7 +231,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.get_repset_hosts")
     @mock.patch("mongo_db_data.get_repset_name")
     @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_connection_success(self, mock_repset, mock_name, mock_hosts, mock_load):
+    def test_connection_success(self, mock_repset, mock_name, mock_hosts,
+                                mock_load):
 
         """Function:  test_connection_success
 
