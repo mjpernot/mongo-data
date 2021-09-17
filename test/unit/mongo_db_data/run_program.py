@@ -78,6 +78,20 @@ class RepSet(object):
         """
 
         self.name = "name"
+        self.status = True
+        self.err_msg = None
+
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub method holder for mongo_class.Server.connect.
+
+        Arguments:
+
+        """
+
+        return self.status, self.err_msg
 
 
 class CfgTest(object):
@@ -160,6 +174,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_connection_fail
+        test_connection_success
         test_auth_mech
         test_no_auth_mech
         test_run_program
@@ -186,6 +202,58 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.get_repset_hosts")
     @mock.patch("mongo_db_data.get_repset_name")
     @mock.patch("mongo_db_data.mongo_class.RepSet")
+    def test_connection_fail(self, mock_repset, mock_name, mock_hosts, mock_load):
+
+        """Function:  test_connection_fail
+
+        Description:  Test with failed connection.
+
+        Arguments:
+
+        """
+
+        self.repset.status = False
+        self.repset.err_msg = "Error Connection Message"
+
+        mock_repset.return_value = self.repset
+        mock_hosts.return_value = "RepSetHosts"
+        mock_name.return_value = "RepSetName"
+        mock_load.return_value = self.cfg
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mongo_db_data.run_program(self.args_array,
+                                                       self.func_dict))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.get_repset_hosts")
+    @mock.patch("mongo_db_data.get_repset_name")
+    @mock.patch("mongo_db_data.mongo_class.RepSet")
+    def test_connection_success(self, mock_repset, mock_name, mock_hosts, mock_load):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_repset.return_value = self.repset
+        mock_hosts.return_value = "RepSetHosts"
+        mock_name.return_value = "RepSetName"
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(mongo_db_data.run_program(self.args_array,
+                                                   self.func_dict))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.get_repset_hosts")
+    @mock.patch("mongo_db_data.get_repset_name")
+    @mock.patch("mongo_db_data.mongo_class.RepSet")
     def test_auth_mech(self, mock_repset, mock_name, mock_hosts, mock_load):
 
         """Function:  test_auth_mech
@@ -204,6 +272,8 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.run_program(self.args_array,
                                                    self.func_dict))
 
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.gen_libs.load_module")
     @mock.patch("mongo_db_data.get_repset_hosts")
     @mock.patch("mongo_db_data.get_repset_name")
@@ -226,6 +296,8 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.run_program(self.args_array,
                                                    self.func_dict))
 
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.gen_libs.load_module")
     @mock.patch("mongo_db_data.get_repset_hosts")
     @mock.patch("mongo_db_data.get_repset_name")
