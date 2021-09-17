@@ -243,8 +243,8 @@ def insert_doc(repclu, args_array, **kwargs):
 
         # Process files and add --file option.
         for fname in args_array["-f"]:
-            upd_cmd = cmds_gen.add_cmd(cmd, arg=kwargs.get("opt_rep")["-f"],
-                                       val=fname)
+            upd_cmd = cmds_gen.add_cmd(
+                cmd, arg=kwargs.get("opt_rep")["-f"], val=fname)
             proc1 = subinst.Popen(upd_cmd)
             proc1.wait()
             cmd = list(orig_cmd)
