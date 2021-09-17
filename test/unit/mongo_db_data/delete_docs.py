@@ -59,6 +59,8 @@ class RepSetColl(object):
         """
 
         self.query = None
+        self.status = True
+        self.err_msg = None
 
     def connect(self):
 
@@ -70,7 +72,7 @@ class RepSetColl(object):
 
         """
 
-        pass
+        return self.status, self.err_msg
 
     def coll_del_many(self, query):
 
@@ -131,6 +133,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_connection_fail
+        test_connection_success
         test_multiple_lines
         test_multiple_files
         test_empty_file
@@ -158,6 +162,47 @@ class UnitTest(unittest.TestCase):
                             "-a": "authdatabase", "-f": ["file1"]}
         self.args_array3 = {"-b": "databasename", "-t": "tablename",
                             "-a": "authdatabase", "-f": ["file1", "file2"]}
+
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_connection_fail(self, mock_coll):
+
+        """Function:  test_connection_fail
+
+        Description:  Test with failed connection.
+
+        Arguments:
+
+        """
+
+        self.repcoll.status = False
+        self.repcoll.err_msg = "Error Connection Message"
+
+        mock_coll.return_value = self.repcoll
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mongo_db_data.delete_docs(self.repset,
+                                                       self.args_array2))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.gen_libs")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_connection_success(self, mock_coll, mock_lib, mock_disconnect):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.repcoll
+        mock_lib.file_2_list.return_value = ["File1"]
+        mock_lib.str_2_type.return_value = {"query"}
+        mock_disconnect.return_value = True
+
+        self.assertFalse(mongo_db_data.delete_docs(self.repset,
+                                                   self.args_array2))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.gen_libs")
