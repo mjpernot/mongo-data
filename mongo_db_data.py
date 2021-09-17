@@ -375,11 +375,15 @@ def truncate_coll(repclu, args_array, **kwargs):
         coll=args_array.get("-t"), db_auth=args_array.get("-a", None),
         use_arg=repclu.use_arg, use_uri=repclu.use_uri,
         auth_mech=repclu.auth_mech)
-    coll.connect()
+    status = coll.connect()
 
-    # Require override option.
-    coll.coll_del_many({}, True)
-    mongo_libs.disconnect([coll])
+    if status[0]:
+        # Require override option.
+        coll.coll_del_many({}, True)
+        mongo_libs.disconnect([coll])
+
+    else:
+        print("truncate_coll: Connection failure:  %s" % (status[1]))
 
 
 def run_program(args_array, func_dict, **kwargs):
