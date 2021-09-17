@@ -157,9 +157,8 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
 
-    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
-    def test_connection_fail(self, mock_coll, mock_disconnect):
+    def test_connection_fail(self, mock_coll):
 
         """Function:  test_connection_fail
 
@@ -173,7 +172,6 @@ class UnitTest(unittest.TestCase):
         self.repcoll.err_msg = "Error Connection Message"
 
         mock_coll.return_value = self.repcoll
-        mock_disconnect.return_value = True
 
         with gen_libs.no_std_out():
             self.assertFalse(mongo_db_data.truncate_coll(self.repset,
