@@ -126,6 +126,7 @@
 
 # Standard
 import sys
+import subprocess
 
 # Local
 import lib.arg_parser as arg_parser
@@ -233,6 +234,7 @@ def insert_doc(repclu, args_array, **kwargs):
     """
 
     args_array = dict(args_array)
+    subinst = gen_libs.get_inst(subprocess)
 
     if args_array.get("-f", None):
         cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
@@ -243,7 +245,8 @@ def insert_doc(repclu, args_array, **kwargs):
         for fname in args_array["-f"]:
             upd_cmd = cmds_gen.add_cmd(cmd, arg=kwargs.get("opt_rep")["-f"],
                                        val=fname)
-            cmds_gen.run_prog(upd_cmd)
+            proc1 = subinst.Popen(upd_cmd)
+            proc1.wait()
             cmd = list(orig_cmd)
 
 
