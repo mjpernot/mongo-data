@@ -61,6 +61,8 @@ class Coll2(object):
 
         self.cnt = 0
         self.find = {"_id": "UniqueIdentifier"}
+        self.status = True
+        self.err_msg = None
 
     def coll_cnt(self):
 
@@ -96,7 +98,7 @@ class Coll2(object):
 
         """
 
-        return True
+        return self.status, self.err_msg
 
 
 class Coll(object):
@@ -125,6 +127,8 @@ class Coll(object):
 
         self.cnt = 1
         self.find = {"_id": "RepSetName2"}
+        self.status = True
+        self.err_msg = None
 
     def coll_cnt(self):
 
@@ -160,7 +164,7 @@ class Coll(object):
 
         """
 
-        return True
+        return self.status, self.err_msg
 
 
 class CfgTest(object):
@@ -275,6 +279,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_connection_fail
+        test_connection_success
         test_auth_mech
         test_no_auth_mech
         test_no_repset_name
@@ -298,6 +304,43 @@ class UnitTest(unittest.TestCase):
         self.cfg3 = CfgTest3()
         self.coll = Coll()
         self.coll2 = Coll2()
+
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_connection_fail(self, mock_coll):
+
+        """Function:  test_connection_fail
+
+        Description:  Test with failed connection.
+
+        Arguments:
+
+        """
+
+        self.coll.status = False
+        self.coll.err_msg = "Error Connection Message"
+
+        mock_coll.return_value = self.coll
+
+        with gen_libs.no_std_out():
+            self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_connection_success(self, mock_coll, mock_disconnect):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),
+                         "RepSetName2")
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
