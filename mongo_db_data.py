@@ -327,25 +327,29 @@ def delete_docs(repclu, args_array, **kwargs):
         coll=args_array.get("-t"), db_auth=args_array.get("-a", None),
         use_arg=repclu.use_arg, use_uri=repclu.use_uri,
         auth_mech=repclu.auth_mech)
-    coll.connect()
+    status = coll.connect()
 
-    if args_array.get("-f", None):
+    if status[0]:
+        if args_array.get("-f", None):
 
-        for fname in args_array["-f"]:
-            lines = gen_libs.file_2_list(fname)
+            for fname in args_array["-f"]:
+                lines = gen_libs.file_2_list(fname)
 
-            # Process each line as a delete.
-            for qry in lines:
-                coll.coll_del_many(gen_libs.str_2_type(qry))
+                # Process each line as a delete.
+                for qry in lines:
+                    coll.coll_del_many(gen_libs.str_2_type(qry))
 
-    # Assume -kN and -lN options.
+        # Assume -kN and -lN options.
+        else:
+            status, qry = process_args(args_array)
+
+            if not status:
+                coll.coll_del_many(qry)
+
+        mongo_libs.disconnect([coll])
+
     else:
-        status, qry = process_args(args_array)
-
-        if not status:
-            coll.coll_del_many(qry)
-
-    mongo_libs.disconnect([coll])
+        print("delete_docs: Connection failure:  %s" % (status[1]))
 
 
 def truncate_coll(repclu, args_array, **kwargs):
@@ -418,8 +422,7 @@ def run_program(args_array, func_dict, **kwargs):
         mongo_libs.disconnect([repclu])
 
     else:
-        if not args_array.get("-w", False):
-            print("run_program: Connection failure:  %s" % (status[1]))
+        print("run_program: Connection failure:  %s" % (status[1]))
 
 
 def main():
