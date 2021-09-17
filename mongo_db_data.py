@@ -408,10 +408,18 @@ def run_program(args_array, func_dict, **kwargs):
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
         repset_hosts=repset_hosts, use_arg=svr_cfg.use_arg,
         use_uri=svr_cfg.use_uri,**auth_mech)
+    status = repclu.connect()
 
-    # Intersect args_array and func_dict to determine which functions to call.
-    for func in set(args_array.keys()) & set(func_dict.keys()):
-        func_dict[func](repclu, args_array, **kwargs)
+    if status[0]:
+        # Intersect args_array and func_dict to determine which functions to call.
+        for func in set(args_array.keys()) & set(func_dict.keys()):
+            func_dict[func](repclu, args_array, **kwargs)
+
+        mongo_libs.disconnect([repclu])
+
+    else:
+        if not args_array.get("-w", False):
+            print("run_program: Connection failure:  %s" % (status[1]))
 
 
 def main():
