@@ -179,16 +179,17 @@ def get_repset_name(svr_cfg):
             port=svr_cfg.port, db="local", coll="system.replset",
             auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
             use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri, **auth_mech)
-        coll.connect()
+        status = coll.connect()
+        rep_set = None
 
-        # Are there any records.
-        if coll.coll_cnt() != 0:
-            rep_set = coll.coll_find1().get("_id")
+        if status[0]:
+            if coll.coll_cnt() != 0:
+                rep_set = coll.coll_find1().get("_id")
+
+            mongo_libs.disconnect([coll])
 
         else:
-            rep_set = None
-
-        mongo_libs.disconnect([coll])
+            print("get_repset_name: Connection failure:  %s" % (status[1]))
 
     return rep_set
 

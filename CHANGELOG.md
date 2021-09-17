@@ -11,7 +11,7 @@ Breaking Change
 - main:  Fixed handling command line arguments.
 
 ### Changed
-- run_program, delete_docs, truncate_coll:  Added check on connection status.
+- run_program, delete_docs, truncate_coll, get_repset_name:  Added check on connection status.
 - insert_doc:  Replaced cmds_gen.run_prog with the subprocess execution code.
 - truncate_coll, delete_docs:  Added auth_mech to mongo_class instance call.
 - get_repset_name, run_program:  Processed and added auth_mech to the mongo_class instance call.
