@@ -12,6 +12,7 @@ Breaking Change
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- insert_docs:  Replaced cmds_gen.add_cmd with gen_libs.add_cmd.
 - run_program:  Added auth_db keyword argument to mongo_class.RepSet instance call.
 - truncate_coll, delete_docs:  Changed default authentication database from none to -b option value.
 - run_program, delete_docs, truncate_coll, get_repset_name:  Added check on connection status.
