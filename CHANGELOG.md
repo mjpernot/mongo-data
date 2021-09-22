@@ -25,6 +25,9 @@ Breaking Change
 - config/mongo.py.TEMPLATE:  Added SSL entries and auth_db entry.
 - Documentation updates.
 
+### Removed
+- cmds_gen module
+
 
 ## [2.1.0] - 2019-10-28
 ### Fixed
