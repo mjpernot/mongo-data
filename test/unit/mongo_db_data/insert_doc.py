@@ -115,7 +115,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.insert_doc(self.repset,
                                                   self.args_array2))
 
-    @mock.patch("mongo_db_data.cmds_gen.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
     @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
     @mock.patch("mongo_db_data.mongo_libs.create_cmd")
     def test_insert_doc(self, mock_cmd, mock_open, mock_add):
