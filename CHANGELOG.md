@@ -12,6 +12,7 @@ Breaking Change
 - main:  Fixed handling command line arguments.
 
 ### Changed
+- truncate_coll:  Changed default authentication database from none to -b option value.
 - run_program, delete_docs, truncate_coll, get_repset_name:  Added check on connection status.
 - insert_doc:  Replaced cmds_gen.run_prog with the subprocess execution code.
 - truncate_coll, delete_docs:  Added auth_mech to mongo_class instance call.
