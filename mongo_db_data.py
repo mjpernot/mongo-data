@@ -10,13 +10,13 @@
 
     Usage:
         mongo_db_data.py -c cfg_file -d path
-            {-I -b db_name -t coll_name -f {path/file | path/file*} |
+            {-I -b db_name -t coll_name -a name -f {path/file | path/file*} |
              -D -b db_name -t coll_name
                 {-k1 "key" -l1 "value1" ["value2" "value3" ...]
                  [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
-                 [-f {path/file | path/file*}]} |
-             -T -b db_name -t coll_name}
-            [-a name] [-p path}
+                 [-f {path/file | path/file*}] [-a name]} |
+             -T -b db_name -t coll_name [-a name]}
+             [-p path}
             [-v | -h]
 
     Arguments:
@@ -28,6 +28,8 @@
             -t coll_name => Collection Name.
             -f file(s) => JSON document to be inserted.  Requires absolute
                 path.
+            -a name => Authentication Database Name.  Required for accounts
+                not in database (-b).
 
         -D => Delete JSON document from database.
             -b db_name => Database Name.
@@ -37,13 +39,15 @@
                 Values are enclosed in quotes (") and space-delimited ( ).
             -f file(s) => JSON Document for delete search criteria.  Requires
                  absolute path.
+            -a name => Authentication Database Name.  Required for accounts
+                not in database (-b).
 
         -T => Truncate collection in database.
             -b db_name => Database Name.
             -t coll_name => Collection Name.
+            -a name => Authentication Database Name.  Required for accounts
+                not in database (-b).
 
-        -a name => Authentication Database Name.  Required for accounts
-            not in database (-b).
         -p => Path to Mongo binaries.  Only required if the user
             running the program does not have the Mongo binaries in their path.
         -v => Display version of this program.
