@@ -422,6 +422,7 @@ def run_program(args_array, func_dict, **kwargs):
         svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
         repset_hosts=repset_hosts, use_arg=svr_cfg.use_arg,
+        auth_db=args_array.get("-a", args_array.get("-b")),
         use_uri=svr_cfg.use_uri,**auth_mech)
     status = repclu.connect()
 
