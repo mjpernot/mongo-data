@@ -8,6 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 Breaking Change
 
 ### Fixed
+- truncate_coll:  Changed keyword argument from db_auth to auth_db.
 - main:  Fixed handling command line arguments.
 
 ### Changed
