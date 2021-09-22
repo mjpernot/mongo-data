@@ -29,7 +29,7 @@
             -f file(s) => JSON document to be inserted.  Requires absolute
                 path.
             -a name => Authentication Database Name.  Required for accounts
-                not in database (-b).
+                not in database (-b option).
 
         -D => Delete JSON document from database.
             -b db_name => Database Name.
@@ -40,13 +40,13 @@
             -f file(s) => JSON Document for delete search criteria.  Requires
                  absolute path.
             -a name => Authentication Database Name.  Required for accounts
-                not in database (-b).
+                not in database (-b option).
 
         -T => Truncate collection in database.
             -b db_name => Database Name.
             -t coll_name => Collection Name.
             -a name => Authentication Database Name.  Required for accounts
-                not in database (-b).
+                not in database (-b option).
 
         -p => Path to Mongo binaries.  Only required if the user
             running the program does not have the Mongo binaries in their path.
