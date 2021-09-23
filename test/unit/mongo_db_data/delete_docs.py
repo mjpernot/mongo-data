@@ -114,8 +114,6 @@ class RepSetCfg(object):
         self.japd = None
         self.host = "HostName"
         self.port = 27017
-        self.db = "test"
-        self.coll = "CollectionName"
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
