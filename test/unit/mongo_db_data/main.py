@@ -29,7 +29,6 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mongo_db_data
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -341,11 +340,11 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.run_program")
     @mock.patch("mongo_db_data.gen_libs.help_func")
     @mock.patch("mongo_db_data.arg_parser")
-    def test_arg_file_chk_true(self, mock_arg, mock_help, mock_run):
+    def test_arg_file_chk_false(self, mock_arg, mock_help, mock_run):
 
-        """Function:  test_arg_file_chk_true
+        """Function:  test_arg_file_chk_false
 
-        Description:  Test arg_file_chk if returns true.
+        Description:  Test arg_file_chk if returns false.
 
         Arguments:
 
