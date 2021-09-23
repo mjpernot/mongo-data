@@ -193,8 +193,6 @@ class CfgTest(object):
         self.japd = None
         self.host = "HostName"
         self.port = 27017
-        self.db = "test"
-        self.coll = "CollectionName"
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
@@ -228,8 +226,6 @@ class CfgTest2(object):
         self.japd = None
         self.host = "HostName"
         self.port = 27017
-        self.db = "test"
-        self.coll = "CollectionName"
         self.auth = True
         self.conf_file = "ConFile"
         self.use_arg = True
@@ -262,8 +258,6 @@ class CfgTest3(object):
         self.japd = None
         self.host = "HostName"
         self.port = 27017
-        self.db = "test"
-        self.coll = "CollectionName"
         self.auth = True
         self.conf_file = "ConFile"
         self.auth_mech = "SCRAM-SHA-1"
