@@ -35,7 +35,7 @@ import version
 __version__ = version.__version__
 
 
-def insert_doc(repset, args_array, **kwargs):
+def insert_doc(repset, args_array):
 
     """Function:  insert_doc
 
@@ -153,8 +153,6 @@ class CfgTest2(object):
         self.japd = None
         self.host = "HostName"
         self.port = 27017
-        self.db = "test"
-        self.coll = "CollectionName"
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
