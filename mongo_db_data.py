@@ -422,11 +422,11 @@ def run_program(args_array, func_dict, **kwargs):
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
         repset_hosts=repset_hosts, use_arg=svr_cfg.use_arg,
         auth_db=args_array.get("-a", args_array.get("-b")),
-        use_uri=svr_cfg.use_uri,**auth_mech)
+        use_uri=svr_cfg.use_uri, **auth_mech)
     status = repclu.connect()
 
     if status[0]:
-        # Intersect args_array and func_dict to determine which functions to call.
+        # Intersect args_array & func_dict to determine which functions to call
         for func in set(args_array.keys()) & set(func_dict.keys()):
             func_dict[func](repclu, args_array, **kwargs)
 
