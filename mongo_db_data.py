@@ -328,10 +328,9 @@ def delete_docs(repclu, args_array, **kwargs):
         repclu.name, repclu.user, repclu.japd, host=repclu.host,
         port=repclu.port, auth=repclu.auth, repset=repclu.repset,
         repset_hosts=repclu.repset_hosts, db=args_array.get("-b"),
-        coll=args_array.get("-t"),
         auth_db=args_array.get("-a", args_array.get("-b")),
         use_arg=repclu.use_arg, use_uri=repclu.use_uri,
-        auth_mech=repclu.auth_mech)
+        coll=args_array.get("-t"), auth_mech=repclu.auth_mech)
     status = coll.connect()
 
     if status[0]:
