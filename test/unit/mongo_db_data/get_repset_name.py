@@ -42,10 +42,10 @@ class Coll2(object):
     Description:  Class stub holder for mongo_class.Coll class.
 
     Methods:
-        __init__ -> Class initialization.
-        coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
-        coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
-        connect -> Stub holder for mongo_class.Coll.connect method.
+        __init__
+        coll_cnt
+        coll_find1
+        connect
 
     """
 
@@ -59,7 +59,10 @@ class Coll2(object):
 
         """
 
-        pass
+        self.cnt = 0
+        self.find = {"_id": "UniqueIdentifier"}
+        self.status = True
+        self.err_msg = None
 
     def coll_cnt(self):
 
@@ -71,7 +74,7 @@ class Coll2(object):
 
         """
 
-        return 0
+        return self.cnt
 
     def coll_find1(self):
 
@@ -83,7 +86,7 @@ class Coll2(object):
 
         """
 
-        return {"_id": "UniqueIdentifier"}
+        return self.find
 
     def connect(self):
 
@@ -95,7 +98,7 @@ class Coll2(object):
 
         """
 
-        return True
+        return self.status, self.err_msg
 
 
 class Coll(object):
@@ -105,10 +108,10 @@ class Coll(object):
     Description:  Class stub holder for mongo_class.Coll class.
 
     Methods:
-        __init__ -> Class initialization.
-        coll_cnt -> Stub holder for mongo_class.Coll.coll_cnt method.
-        coll_find1 -> Stub holder for mongo_class.Coll.coll_find1 method.
-        connect -> Stub holder for mongo_class.Coll.connect method.
+        __init__
+        coll_cnt
+        coll_find1
+        connect
 
     """
 
@@ -122,7 +125,10 @@ class Coll(object):
 
         """
 
-        pass
+        self.cnt = 1
+        self.find = {"_id": "RepSetName2"}
+        self.status = True
+        self.err_msg = None
 
     def coll_cnt(self):
 
@@ -134,7 +140,7 @@ class Coll(object):
 
         """
 
-        return 1
+        return self.cnt
 
     def coll_find1(self):
 
@@ -146,7 +152,7 @@ class Coll(object):
 
         """
 
-        return {"_id": "RepSetName2"}
+        return self.find
 
     def connect(self):
 
@@ -158,7 +164,105 @@ class Coll(object):
 
         """
 
-        return True
+        return self.status, self.err_msg
+
+
+class CfgTest(object):
+
+    """Class:  CfgTest
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.repset = "RepSetName"
+        self.use_arg = True
+        self.use_uri = False
+
+
+class CfgTest2(object):
+
+    """Class:  CfgTest2
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.use_arg = True
+        self.use_uri = False
+
+
+class CfgTest3(object):
+
+    """Class:  CfgTest3
+
+    Description:  Class which is a representation of a cfg module.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.auth_mech = "SCRAM-SHA-1"
+        self.use_arg = True
+        self.use_uri = False
 
 
 class UnitTest(unittest.TestCase):
@@ -168,10 +272,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_repset_name -> Test with no repset name found.
-        test_mongo_repset_name -> Test with Mongo db setting repset name.
-        test_cfg_repset_name -> Test with cfg module setting repset name.
+        setUp
+        test_connection_fail
+        test_connection_success
+        test_auth_mech
+        test_no_auth_mech
+        test_no_repset_name
+        test_mongo_repset_name
+        test_cfg_repset_name
 
     """
 
@@ -185,73 +293,86 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class CfgTest2(object):
-
-            """Class:  CfgTest2
-
-            Description:  Class which is a representation of a cfg module.
-
-            Methods:
-                __init__ -> Initialize configuration environment.
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.passwd = "pwd"
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-
-        class CfgTest(object):
-
-            """Class:  CfgTest
-
-            Description:  Class which is a representation of a cfg module.
-
-            Methods:
-                __init__ -> Initialize configuration environment.
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.passwd = "pwd"
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-                self.repset = "RepSetName"
-
         self.cfg = CfgTest()
         self.cfg2 = CfgTest2()
+        self.cfg3 = CfgTest3()
+        self.coll = Coll()
+        self.coll2 = Coll2()
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_connection_fail(self, mock_coll):
+
+        """Function:  test_connection_fail
+
+        Description:  Test with failed connection.
+
+        Arguments:
+
+        """
+
+        self.coll.status = False
+        self.coll.err_msg = "Error Connection Message"
+
+        mock_coll.return_value = self.coll
+
+        with gen_libs.no_std_out():
+            self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_connection_success(self, mock_coll, mock_disconnect):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),
+                         "RepSetName2")
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_auth_mech(self, mock_coll, mock_disconnect):
+
+        """Function:  test_auth_mech
+
+        Description:  Test with auth_mech passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg3),
+                         "RepSetName2")
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.Coll")
+    def test_no_auth_mech(self, mock_coll, mock_disconnect):
+
+        """Function:  test_no_auth_mech
+
+        Description:  Test with no auth_mech passed.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.coll
+        mock_disconnect.return_value = True
+
+        self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),
+                         "RepSetName2")
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
     def test_no_repset_name(self, mock_coll, mock_disconnect):
 
@@ -263,12 +384,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = Coll2()
+        mock_coll.return_value = self.coll2
         mock_disconnect.return_value = True
 
         self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
     def test_mongo_repset_name(self, mock_coll, mock_disconnect):
 
@@ -280,7 +401,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = Coll()
+        mock_coll.return_value = self.coll
         mock_disconnect.return_value = True
 
         self.assertEqual(mongo_db_data.get_repset_name(self.cfg2),

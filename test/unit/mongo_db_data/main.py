@@ -29,7 +29,6 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mongo_db_data
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -41,27 +40,24 @@ class UnitTest(unittest.TestCase):
 
     Description:  Class which is a representation of a unit testing.
 
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:
-
     Methods:
-        setUp -> Initialize testing environment.
-        test_help_true -> Test help if returns true.
-        test_help_false -> Test help if returns false.
-        test_arg_req_true -> Test arg_require if returns true.
-        test_arg_req_false -> Test arg_require if returns false.
-        test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns true.
-        test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns false.
-        test_arg_xor_dict_false -> Test arg_xor_dict if returns false.
-        test_arg_xor_dict_true -> Test arg_xor_dict if returns true.
-        test_arg_cond_req_false -> Test arg_cond_req if returns false.
-        test_arg_cond_req_true -> Test arg_cond_req if returns true.
-        test_arg_noreq_xor_false -> Test arg_noreq_xor if returns false.
-        test_arg_noreq_xor_true -> Test arg_noreq_xor if returns true.
-        test_arg_file_chk_true -> Test arg_file_chk if returns true.
-        test_arg_file_chk_false -> Test arg_file_chk if returns false.
-        test_process_f_option -> Test with processing -f option.
+        setUp
+        test_help_true
+        test_help_false
+        test_arg_req_true
+        test_arg_req_false
+        test_arg_dir_chk_crt_true
+        test_arg_dir_chk_crt_false
+        test_arg_xor_dict_false
+        test_arg_xor_dict_true
+        test_arg_cond_req_false
+        test_arg_cond_req_true
+        test_arg_noreq_xor_false
+        test_arg_noreq_xor_true
+        test_arg_file_chk_true
+        test_arg_file_chk_false
+        test_process_f_option
+        test_run_program
 
     """
 
@@ -344,11 +340,11 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.run_program")
     @mock.patch("mongo_db_data.gen_libs.help_func")
     @mock.patch("mongo_db_data.arg_parser")
-    def test_arg_file_chk_true(self, mock_arg, mock_help, mock_run):
+    def test_arg_file_chk_false(self, mock_arg, mock_help, mock_run):
 
-        """Function:  test_arg_file_chk_true
+        """Function:  test_arg_file_chk_false
 
-        Description:  Test arg_file_chk if returns true.
+        Description:  Test arg_file_chk if returns false.
 
         Arguments:
 
@@ -389,6 +385,31 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_file_chk.return_value = False
         mock_run.return_value = True
         mock_lib.rm_dup_list.return_value = ["File1"]
+
+        self.assertFalse(mongo_db_data.main())
+
+    @mock.patch("mongo_db_data.run_program")
+    @mock.patch("mongo_db_data.gen_libs.help_func")
+    @mock.patch("mongo_db_data.arg_parser")
+    def test_run_program(self, mock_arg, mock_help, mock_run):
+
+        """Function:  test_run_program
+
+        Description:  Test with run_program.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = False
+        mock_arg.arg_xor_dict.return_value = True
+        mock_arg.arg_cond_req.return_value = True
+        mock_arg.arg_noreq_xor.return_value = True
+        mock_arg.arg_file_chk.return_value = False
+        mock_run.return_value = True
 
         self.assertFalse(mongo_db_data.main())
 
