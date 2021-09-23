@@ -24,12 +24,10 @@ else:
     import unittest
 
 # Third-party
-import mock
 
 # Local
 sys.path.append(os.getcwd())
 import mongo_db_data
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -42,10 +40,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_repset_name -> Test with no repset name found.
-        test_mongo_repset_name -> Test with Mongo db setting repset name.
-        test_cfg_repset_name -> Test with cfg module setting repset name.
+        setUp
+        test_no_repset_name
+        test_mongo_repset_name
+        test_cfg_repset_name
 
     """
 
@@ -66,7 +64,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a cfg module.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 
@@ -89,7 +87,7 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of a cfg module.
 
             Methods:
-                __init__ -> Initialize configuration environment.
+                __init__
 
             """
 

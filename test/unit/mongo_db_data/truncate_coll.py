@@ -42,9 +42,9 @@ class RepSetColl(object):
     Description:  Class stub holder for mongo_class.RepSetColl class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> Stub holder for mongo_class.RepSetColl.connect method.
-        coll_del_many -> Stub holder for mongo_class.RepSetColl.coll_del_many.
+        __init__
+        connect
+        coll_del_many
 
     """
 
@@ -58,7 +58,10 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = None
+        self.override = None
+        self.status = True
+        self.err_msg = None
 
     def connect(self):
 
@@ -70,7 +73,7 @@ class RepSetColl(object):
 
         """
 
-        pass
+        return self.status, self.err_msg
 
     def coll_del_many(self, query, override):
 
@@ -84,7 +87,43 @@ class RepSetColl(object):
 
         """
 
-        pass
+        self.query = query
+        self.override = override
+
+
+class RepSetCfg(object):
+
+    """Class:  RepSetCfg
+
+    Description:  Class which is a representation of a RepSet class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the CfgTest class.
+
+        Arguments:
+
+        """
+
+        self.name = "MongoName"
+        self.user = "root"
+        self.japd = None
+        self.host = "HostName"
+        self.port = 27017
+        self.auth = True
+        self.conf_file = "ConFile"
+        self.repset = "RepSetName"
+        self.repset_hosts = ["List of hosts"]
+        self.auth_mech = "SCRAM-SHA-1"
+        self.use_arg = True
+        self.use_uri = False
 
 
 class UnitTest(unittest.TestCase):
@@ -94,8 +133,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_truncate_coll -> Test truncate_coll method.
+        setUp
+        test_connection_fail
+        test_connection_success
+        test_truncate_coll
 
     """
 
@@ -109,44 +150,50 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class RepSetCfg(object):
-
-            """Class:  RepSetCfg
-
-            Description:  Class which is a representation of a RepSet class.
-
-            Methods:
-                __init__ -> Initialize configuration environment.
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the CfgTest class.
-
-                Arguments:
-
-                """
-
-                self.name = "MongoName"
-                self.user = "root"
-                self.passwd = "pwd"
-                self.host = "HostName"
-                self.port = 27017
-                self.db = "test"
-                self.coll = "CollectionName"
-                self.auth = True
-                self.conf_file = "ConFile"
-                self.repset = "RepSetName"
-                self.repset_hosts = ["List of hosts"]
-
         self.repset = RepSetCfg()
+        self.repcoll = RepSetColl()
         self.args_array = {"-b": "databasename", "-t": "tablename",
                            "-a": "authdatabase"}
 
-    @mock.patch("mongo_db_data.cmds_gen.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_connection_fail(self, mock_coll):
+
+        """Function:  test_connection_fail
+
+        Description:  Test with failed connection.
+
+        Arguments:
+
+        """
+
+        self.repcoll.status = False
+        self.repcoll.err_msg = "Error Connection Message"
+
+        mock_coll.return_value = self.repcoll
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mongo_db_data.truncate_coll(self.repset,
+                                                         self.args_array))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
+    @mock.patch("mongo_db_data.mongo_class.RepSetColl")
+    def test_connection_success(self, mock_coll, mock_disconnect):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.repcoll
+        mock_disconnect.return_value = True
+
+        self.assertFalse(mongo_db_data.truncate_coll(self.repset,
+                                                     self.args_array))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_truncate_coll(self, mock_coll, mock_disconnect):
 
@@ -158,7 +205,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_coll.return_value = RepSetColl()
+        mock_coll.return_value = self.repcoll
         mock_disconnect.return_value = True
 
         self.assertFalse(mongo_db_data.truncate_coll(self.repset,

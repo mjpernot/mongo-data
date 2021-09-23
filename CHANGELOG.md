@@ -4,35 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.0.0] - 2021-09-15
+Breaking Change
+
+### Fixed
+- truncate_coll, delete_docs:  Changed keyword argument from db_auth to auth_db.
+- main:  Fixed handling command line arguments.
+
+### Changed
+- insert_docs:  Replaced cmds_gen.add_cmd with gen_libs.add_cmd.
+- run_program:  Added auth_db keyword argument to mongo_class.RepSet instance call.
+- truncate_coll, delete_docs:  Changed default authentication database from none to -b option value.
+- run_program, delete_docs, truncate_coll, get_repset_name:  Added check on connection status.
+- insert_doc:  Replaced cmds_gen.run_prog with the subprocess execution code.
+- truncate_coll, delete_docs:  Added auth_mech to mongo_class instance call.
+- get_repset_name, run_program:  Processed and added auth_mech to the mongo_class instance call.
+- Removed unneccessary \*\*kwargs from arguments lists.
+- truncate_coll, delete_docs, get_repset_name:  Replaced cmds_gen.disconnect call with mongo_libs.disconnect.
+- run_program, truncate_coll, delete_docs, get_repset_name:  Update configuration entries to match new config file and addeduse_arg and use_uri to mongo_class instance call.
+- config/mongo.py.TEMPLATE:  Added SSL entries and auth_db entry.
+- Documentation updates.
+
+### Removed
+- cmds_gen module
+
+
 ## [2.1.0] - 2019-10-28
 ### Fixed
 - get_repset_name:  Set repset variable to None if no database record is found.
 
 ### Changed
 - get_repset_name:  Added .connect() call for the connection to the mongo_class.Coll class instance.
-- get_repset_name:  Changed a number of arguments from positional to keyword arguments.
-- delete_docs:  Changed a number of arguments from positional to keyword arguments.
-- truncate_coll:  Changed a number of arguments from positional to keyword arguments.
-- run_program:  Changed a number of arguments from positional to keyword arguments.
+- get_repset_name, delete_docs, truncate_coll, run_program:  Changed a number of arguments from positional to keyword arguments.
 
 
 ## [2.0.2] - 2019-10-03
 ### Fixed
-- insert_doc:  Fixed problem with mutable default arguments issue.
-- process_args:  Fixed problem with mutable default arguments issue.
-- delete_docs:  Fixed problem with mutable default arguments issue.
-- truncate_coll:  Fixed problem with mutable default arguments issue.
-- run_program:  Fixed problem with mutable default arguments issue.
+- insert_doc, process_args, delete_docs, truncate_coll, run_program:  Fixed problem with mutable default arguments issue.
 
 ### Changed
-- get_repset_name:  Changed variable to standard naming convention.
+- get_repset_name, insert_doc, delete_docs, truncate_coll, run_program:  Changed variable to standard naming convention.
 - insert_doc:  Removed commented out code.  Not yet implemented.
-- insert_doc:  Changed variable to standard naming convention.
-- process_args:  Changed variable name to be more descriptive of use.
-- delete_docs:  Changed variable name to be more descriptive of use.
-- delete_docs:  Changed variables to standard naming convention.
-- truncate_coll:  Changed variables to standard naming convention.
-- run_program:  Changed variable to standard naming convention.
+- process_args, delete_docs:  Changed variable name to be more descriptive of use.
 - main:  Refactored "if" statements.
 - Documentation updates.
 
@@ -58,7 +71,6 @@ Breaking Change
 ## [1.2.0] - 2018-04-26
 ### Added
 - Changed "svr_mongo" to "mongo_class" module reference.
-- Changed "svr_mongo" to "mongo_class" module reference.
 - Added single-source version control.
 
 
@@ -70,7 +82,7 @@ Breaking Change
 
 ## [1.1.0] - 2017-08-16
 ### Changed
-- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
+- Help\_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 - Change single quotes to double quotes.
 - Convert program to use local libraries from ./lib directory.
 

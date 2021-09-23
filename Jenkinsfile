@@ -21,7 +21,8 @@ pipeline {
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
-                pip2 install pymongo==3.2.0 --user
+                pip2 install psutil==5.4.3 --user
+                pip2 install pymongo==3.8.0 --user
                 ./test/unit/mongo_db_data/delete_docs.py
                 ./test/unit/mongo_db_data/get_repset_hosts.py
                 ./test/unit/mongo_db_data/get_repset_name.py
@@ -54,38 +55,43 @@ pipeline {
             steps {
                 script {
                     server = Artifactory.server('Artifactory')
-                    server.credentialsId = 'svc-highpoint-artifactory'
+                    server.credentialsId = 'art-svc-highpoint-dev'
                     uploadSpec = """{
                         "files": [
                             {
                                 "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mongo-data/"
+                                "target": "pypi-proj-local/highpoint/mongo-data/"
                             },
                             {
                                 "pattern": "./*.txt",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mongo-data/"
+                                "target": "pypi-proj-local/highpoint/mongo-data/"
                             },
                             {
                                 "pattern": "./*.md",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mongo-data/"
+                                "target": "pypi-proj-local/highpoint/mongo-data/"
                             },
                             {
                                 "pattern": "*.TEMPLATE",
                                 "recursive": true,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/mongo-data/config/"
+                                "target": "pypi-proj-local/highpoint/mongo-data/config/"
                             }
                         ]
                     }"""
                     server.upload(uploadSpec)
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs disableDeferredWipeout: true
         }
     }
 }
