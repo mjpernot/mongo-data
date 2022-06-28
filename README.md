@@ -83,8 +83,6 @@ Make the appropriate change to the environment.
     - auth = True
     - auth_db = "admin"
     - auth_mech = "SCRAM-SHA-1"
-    - use_arg = True
-    - use_uri = False
 
   * If connecting to a Mongo replica set:
     - repset = "REPLICA_SET_NAME"
