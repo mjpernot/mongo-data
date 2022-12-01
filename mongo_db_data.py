@@ -125,17 +125,27 @@
 
 
 # Libraries and Global Variables
+from __future__ import print_function
+from __future__ import absolute_import
 
 # Standard
 import sys
 import subprocess
 
 # Local
-import lib.arg_parser as arg_parser
-import lib.gen_libs as gen_libs
-import mongo_lib.mongo_class as mongo_class
-import mongo_lib.mongo_libs as mongo_libs
-import version
+try:
+    from .lib import arg_parser
+    from .lib import gen_libs
+    from .mongo_lib import mongo_libs
+    from .mongo_lib import mongo_class
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.arg_parser as arg_parser
+    import lib.gen_libs as gen_libs
+    import mongo_lib.mongo_libs as mongo_libs
+    import mongo_lib.mongo_class as mongo_class
+    import version
 
 __version__ = version.__version__
 
