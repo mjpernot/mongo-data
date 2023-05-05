@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  run_program.py
@@ -17,13 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -192,7 +185,7 @@ class UnitTest(unittest.TestCase):
         self.cfg2 = CfgTest2()
         self.repset = RepSet()
         self.args_array = {"-I": True, "-c": "config", "-d": "dir/path"}
-        self.func_dict = {"-I": insert_doc}
+        self.func_names = {"-I": insert_doc}
 
     @mock.patch("mongo_db_data.gen_libs.load_module")
     @mock.patch("mongo_db_data.get_repset_hosts")
@@ -219,7 +212,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                       self.func_dict))
+                                                       self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -244,7 +237,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -268,7 +261,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg2
 
         self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -292,7 +285,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -316,7 +309,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
 
 if __name__ == "__main__":

@@ -6,12 +6,12 @@
 
 echo ""
 echo "Unit testing..."
-test/unit/mongo_db_data/delete_docs.py
-test/unit/mongo_db_data/get_repset_hosts.py
-test/unit/mongo_db_data/get_repset_name.py
-test/unit/mongo_db_data/help_message.py
-test/unit/mongo_db_data/insert_doc.py
-test/unit/mongo_db_data/main.py
-test/unit/mongo_db_data/process_args.py
-test/unit/mongo_db_data/run_program.py
-test/unit/mongo_db_data/truncate_coll.py
+/usr/bin/python test/unit/mongo_db_data/delete_docs.py
+/usr/bin/python test/unit/mongo_db_data/get_repset_hosts.py
+/usr/bin/python test/unit/mongo_db_data/get_repset_name.py
+/usr/bin/python test/unit/mongo_db_data/help_message.py
+/usr/bin/python test/unit/mongo_db_data/insert_doc.py
+/usr/bin/python test/unit/mongo_db_data/main.py
+/usr/bin/python test/unit/mongo_db_data/process_args.py
+/usr/bin/python test/unit/mongo_db_data/run_program.py
+/usr/bin/python test/unit/mongo_db_data/truncate_coll.py
