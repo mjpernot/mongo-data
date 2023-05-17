@@ -9,13 +9,13 @@ pipeline {
         stage('Test') {
             steps {
                 dir ('lib') {
-                    git branch: "mod/292", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 dir ('mongo_lib') {
-                    git branch: "mod/421", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
+                    git branch: "mod/422", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
                 }
                 dir ('mongo_lib/lib') {
-                    git branch: "mod/286", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
+                    git branch: "mod/294", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
                 sh """
                 virtualenv test_env
@@ -23,15 +23,15 @@ pipeline {
                 pip2 install mock==2.0.0 --user
                 pip2 install psutil==5.4.3 --user
                 pip2 install pymongo==3.8.0 --user
-                ./test/unit/mongo_db_data/delete_docs.py
-                ./test/unit/mongo_db_data/get_repset_hosts.py
-                ./test/unit/mongo_db_data/get_repset_name.py
-                ./test/unit/mongo_db_data/help_message.py
-                ./test/unit/mongo_db_data/insert_doc.py
-                ./test/unit/mongo_db_data/main.py
-                ./test/unit/mongo_db_data/process_args.py
-                ./test/unit/mongo_db_data/run_program.py
-                ./test/unit/mongo_db_data/truncate_coll.py
+                /usr/bin/python ./test/unit/mongo_db_data/delete_docs.py
+                /usr/bin/python ./test/unit/mongo_db_data/get_repset_hosts.py
+                /usr/bin/python ./test/unit/mongo_db_data/get_repset_name.py
+                /usr/bin/python ./test/unit/mongo_db_data/help_message.py
+                /usr/bin/python ./test/unit/mongo_db_data/insert_doc.py
+                /usr/bin/python ./test/unit/mongo_db_data/main.py
+                /usr/bin/python ./test/unit/mongo_db_data/process_args.py
+                /usr/bin/python ./test/unit/mongo_db_data/run_program.py
+                /usr/bin/python ./test/unit/mongo_db_data/truncate_coll.py
                 deactivate
                 rm -rf test_env
                 """
