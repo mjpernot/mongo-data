@@ -189,7 +189,6 @@ def get_repset_name(svr_cfg):
             svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
             port=svr_cfg.port, db="local", coll="system.replset",
             auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
-            use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri
             ssl_client_ca=svr_cfg.ssl_client_ca,
             ssl_client_cert=svr_cfg.ssl_client_cert,
             ssl_client_key=svr_cfg.ssl_client_key,
