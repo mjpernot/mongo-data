@@ -28,6 +28,43 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "mysql_cfg", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class RepSetColl(object):
 
     """Class:  RepSetColl
@@ -115,8 +152,10 @@ class RepSetCfg(object):
         self.repset = "RepSetName"
         self.repset_hosts = ["List of hosts"]
         self.auth_mech = "SCRAM-SHA-1"
-        self.use_arg = True
-        self.use_uri = False
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class UnitTest(unittest.TestCase):
@@ -145,8 +184,9 @@ class UnitTest(unittest.TestCase):
 
         self.repset = RepSetCfg()
         self.repcoll = RepSetColl()
-        self.args_array = {"-b": "databasename", "-t": "tablename",
-                           "-a": "authdatabase"}
+        self.args = ArgParser()
+        self.args.args_array = {
+            "-b": "databasename", "-t": "tablename", "-a": "authdatabase"}
 
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
     def test_connection_fail(self, mock_coll):
@@ -165,8 +205,8 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = self.repcoll
 
         with gen_libs.no_std_out():
-            self.assertFalse(mongo_db_data.truncate_coll(self.repset,
-                                                         self.args_array))
+            self.assertFalse(
+                mongo_db_data.truncate_coll(self.repset, self.args))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
@@ -183,8 +223,7 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = self.repcoll
         mock_disconnect.return_value = True
 
-        self.assertFalse(mongo_db_data.truncate_coll(self.repset,
-                                                     self.args_array))
+        self.assertFalse(mongo_db_data.truncate_coll(self.repset, self.args))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.RepSetColl")
@@ -201,8 +240,7 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = self.repcoll
         mock_disconnect.return_value = True
 
-        self.assertFalse(mongo_db_data.truncate_coll(self.repset,
-                                                     self.args_array))
+        self.assertFalse(mongo_db_data.truncate_coll(self.repset, self.args))
 
 
 if __name__ == "__main__":

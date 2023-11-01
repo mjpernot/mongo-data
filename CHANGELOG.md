@@ -5,6 +5,18 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [3.1.0] - 2023-10-30
+- Upgraded python-lib to v2.10.1
+- Upgraded mongo-lib to 4.2.7
+- Replaced the arg_parser code with gen_class.ArgParser code.
+
+### Fixed
+- Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
+- Multiple functions: Added SSL entries to the mongo_class instance calls.
+
+### Changed
+- run_program: Removed code to determine if auth_mech was available.
+- main, insert_doc: Removed gen_libs.get_inst call.
+- Documentation changes.
 
 
 ## [3.0.2] - 2022-12-01
