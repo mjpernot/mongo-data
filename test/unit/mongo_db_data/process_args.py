@@ -126,9 +126,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                mongo_db_data.process_args(self.args4), (True, self.result))
+#        with gen_libs.no_std_out():
+        self.assertEqual(
+            mongo_db_data.process_args(self.args4), (True, self.result))
 
     def test_missing_value(self):
 
@@ -139,11 +139,11 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-        print(mongo_db_data.process_args(self.args3))
-        print(True, self.result)
+#        print(mongo_db_data.process_args(self.args3))
+#        print(True, self.result)
 #        with gen_libs.no_std_out():
-#            self.assertEqual(
-#                mongo_db_data.process_args(self.args3), (True, self.result))
+        self.assertEqual(
+            mongo_db_data.process_args(self.args3), (True, self.result))
 
     def test_two_keys(self):
 
