@@ -37,6 +37,7 @@ class ArgParser(object):
     Methods:
         __init__
         get_val
+        arg_exist
 
     """
 
@@ -63,6 +64,18 @@ class ArgParser(object):
         """
 
         return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
 
 
 class RepSetColl(object):

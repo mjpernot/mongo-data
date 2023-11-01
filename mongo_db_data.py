@@ -189,7 +189,11 @@ def get_repset_name(svr_cfg):
             svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
             port=svr_cfg.port, db="local", coll="system.replset",
             auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
-            use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri, **auth_mech)
+            use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri
+            ssl_client_ca=svr_cfg.ssl_client_ca,
+            ssl_client_cert=svr_cfg.ssl_client_cert,
+            ssl_client_key=svr_cfg.ssl_client_key,
+            ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
         status = coll.connect()
         rep_set = None
 
@@ -227,7 +231,7 @@ def get_repset_hosts(svr_cfg):
     return repset_hosts
 
 
-def insert_doc(repclu, args_array, **kwargs):
+def insert_doc(repclu, args, **kwargs):
 
     """Function:  insert_doc
 
@@ -238,22 +242,20 @@ def insert_doc(repclu, args_array, **kwargs):
 
     Arguments:
         (input) repclu -> Replication set/cluster instance
-        (input) args_array -> Array of command line options and values
+        (input) args -> ArgParser class instance
         (input) kwargs:
             opt_arg -> Contains list of optional arguments for command line
             opt_rep -> Contains list of replaceable arguments for command line
 
     """
 
-    args_array = dict(args_array)
-
-    if args_array.get("-f", None):
-        cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
-                                    use_repset=True, **kwargs)
+    if args.arg_exist("-f"):
+        cmd = mongo_libs.create_cmd(
+            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
         orig_cmd = list(cmd)
 
         # Process files and add --file option
-        for fname in args_array["-f"]:
+        for fname in args.get_val("-f"):
             upd_cmd = gen_libs.add_cmd(
                 cmd, arg=kwargs.get("opt_rep")["-f"], val=fname)
             proc1 = subprocess.Popen(upd_cmd)
@@ -282,31 +284,25 @@ def process_args(args):
     for item in range(1, 6):
         key = "-k" + str(item)
         val = "-l" + str(item)
+        sub_qry = dict()
 
-        # Missing -kN, but have -lN
-        if not args.arg_exist(key) and args.arg_exist(val):
+        # Only create if have key and value associated
+        if args.arg_exist(key) and args.arg_exist(val):
+            sub_qry["$in"] = args.get_val(val)
+            qry[args.get_val(key)] = sub_qry
+            status = False
+
+        # Missing key, but have value
+        elif not args.arg_exist(key) and args.arg_exist(val):
             print("WARNING: Missing key for value: %s = '%s'"
                   % (val, args.get_val(val)))
             status = True
-            break
 
-        # -kN option is missing, skip
-        elif not args.arg_exist(key):
-            continue
-
-        sub_qry = {}
-
-        # Create list of value(s) for key
-        try:
-            sub_qry["$in"] = args.get_val(val)
-
-        except KeyError:
+        # Have key, but missing value
+        elif args.arg_exist(key) and not args.arg_exist(val):
             print("WARNING: Missing value for key: %s = '%s'"
-                  % (key, args.get_val(key)))
+                  % (val, args.get_val(val)))
             status = True
-            break
-
-        qry[args.get_val(key)] = sub_qry
 
     return status, qry
 
@@ -342,7 +338,7 @@ def delete_docs(repclu, args, **kwargs):
     status = coll.connect()
 
     if status[0]:
-        if args.get_val("-f", def_val=None):
+        if args.arg_exist("-f"):
 
             for fname in args.get_val("-f"):
                 lines = gen_libs.file_2_list(fname)
@@ -489,7 +485,7 @@ def main():
 
     # Process argument list from command line
     args = gen_class.ArgParser(
-        sys.argv, opt_val=opt_val_list,  multi_val=opt_multi_list,
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         do_parse=True)
 
     # Remove dupe files
@@ -505,7 +501,7 @@ def main():
        and args.arg_file_chk(file_perm_chk=file_perm_chk):
         run_program(
             args, func_dict, opt_arg=opt_arg_list, opt_rep=opt_arg_rep)
-       
+
 
 if __name__ == "__main__":
     sys.exit(main())

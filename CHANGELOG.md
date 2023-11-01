@@ -10,10 +10,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Replaced the arg_parser code with gen_class.ArgParser code.
 
 ### Fixed
-- Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
-- Multiple functions: Added SSL entries to the mongo_class instance calls.
+- process_args: Fixed logic error where key did not have a value assigned to it.
 
 ### Changed
+- config/mongo.py.TEMPLATE: Added SSL entries.
+- Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
+- Multiple functions: Added SSL entries to the mongo_class instance calls.
 - run_program: Removed code to determine if auth_mech was available.
 - main, insert_doc: Removed gen_libs.get_inst call.
 - Documentation changes.

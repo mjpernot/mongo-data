@@ -189,8 +189,10 @@ class CfgTest(object):
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
-        self.use_arg = True
-        self.use_uri = False
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class CfgTest2(object):
@@ -221,8 +223,10 @@ class CfgTest2(object):
         self.port = 27017
         self.auth = True
         self.conf_file = "ConFile"
-        self.use_arg = True
-        self.use_uri = False
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class CfgTest3(object):
@@ -254,8 +258,10 @@ class CfgTest3(object):
         self.auth = True
         self.conf_file = "ConFile"
         self.auth_mech = "SCRAM-SHA-1"
-        self.use_arg = True
-        self.use_uri = False
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class UnitTest(unittest.TestCase):

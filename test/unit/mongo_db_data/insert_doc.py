@@ -27,6 +27,56 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class SubProcess(object):
 
     """Class:  SubProcess
@@ -91,10 +141,14 @@ class UnitTest(unittest.TestCase):
         self.subproc = SubProcess()
         self.opt_rep = {"-f": "--file="}
         self.repset = "RepSetInstance"
-        self.args_array = {"-f": ["File1"]}
-        self.args_array2 = {"-f": []}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args3 = ArgParser()
+        self.args.args_array = {"-f": ["File1"]}
+        self.args2.args_array = {"-f": []}
 
-    def test_empty_list(self):
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_empty_list(self, mock_cmd):
 
         """Function:  test_empty_list
 
@@ -104,8 +158,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mongo_db_data.insert_doc(self.repset,
-                                                  self.args_array2))
+        mock_cmd.return_value = ["Command", "List"]
+
+        self.assertFalse(mongo_db_data.insert_doc(self.repset, self.args2))
 
     @mock.patch("mongo_db_data.gen_libs.add_cmd")
     @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
@@ -126,19 +181,19 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             mongo_db_data.insert_doc(
-                self.repset, self.args_array, opt_rep=self.opt_rep))
+                self.repset, self.args, opt_rep=self.opt_rep))
 
     def test_no_files(self):
 
         """Function:  test_no_files
 
-        Description:  Test with no -f option passed.
+        Description:  Test with no -f option.
 
         Arguments:
 
         """
 
-        self.assertFalse(mongo_db_data.insert_doc(self.repset, {}))
+        self.assertFalse(mongo_db_data.insert_doc(self.repset, self.args3))
 
 
 if __name__ == "__main__":
