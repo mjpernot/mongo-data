@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Replaced the arg_parser code with gen_class.ArgParser code.
 
 ### Fixed
+- run_program, delete_docs, truncate_coll: Changed the default value of auth_db to the configuration file auth_db entry.
 - process_args: Fixed logic error where key did not have a value assigned to it.
 
 ### Changed
