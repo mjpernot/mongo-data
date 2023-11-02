@@ -27,6 +27,56 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -51,13 +101,18 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-k1": "key1", "-l1": "value1"}
-        self.args_array2 = {"-k1": "key1", "-l1": "value1",
-                            "-k2": "key2", "-l2": "value2"}
-        self.args_array3 = {"-k1": "key1", "-l1": "value1",
-                            "-k2": "key2", "-l3": "value2"}
-        self.args_array4 = {"-k1": "key1", "-l1": "value1",
-                            "-k3": "key2", "-l2": "value2"}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args3 = ArgParser()
+        self.args4 = ArgParser()
+        self.args5 = ArgParser()
+        self.args.args_array = {"-k1": "key1", "-l1": "value1"}
+        self.args2.args_array = {
+            "-k1": "key1", "-l1": "value1", "-k2": "key2", "-l2": "value2"}
+        self.args3.args_array = {
+            "-k1": "key1", "-l1": "value1", "-k2": "key2", "-l3": "value2"}
+        self.args4.args_array = {
+            "-k1": "key1", "-l1": "value1", "-k3": "key2", "-l2": "value2"}
         self.result = {"key1": {"$in": "value1"}}
         self.result2 = {"key1": {"$in": "value1"}, "key2": {"$in": "value2"}}
 
@@ -72,8 +127,8 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertEqual(mongo_db_data.process_args(self.args_array4),
-                             (True, self.result))
+            self.assertEqual(
+                mongo_db_data.process_args(self.args4), (True, self.result))
 
     def test_missing_value(self):
 
@@ -84,10 +139,9 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
         with gen_libs.no_std_out():
-            self.assertEqual(mongo_db_data.process_args(self.args_array3),
-                             (True, self.result))
+            self.assertEqual(
+                mongo_db_data.process_args(self.args3), (True, self.result))
 
     def test_two_keys(self):
 
@@ -99,8 +153,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mongo_db_data.process_args(self.args_array2),
-                         (False, self.result2))
+        self.assertEqual(
+            mongo_db_data.process_args(self.args2), (False, self.result2))
 
     def test_one_key(self, ):
 
@@ -112,8 +166,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mongo_db_data.process_args(self.args_array),
-                         (False, self.result))
+        self.assertEqual(
+            mongo_db_data.process_args(self.args), (False, self.result))
 
     def test_no_keys(self):
 
@@ -125,7 +179,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertEqual(mongo_db_data.process_args({}), (False, {}))
+        self.assertEqual(mongo_db_data.process_args(self.args5), (False, {}))
 
 
 if __name__ == "__main__":

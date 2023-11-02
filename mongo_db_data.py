@@ -134,15 +134,15 @@ import subprocess
 
 # Local
 try:
-    from .lib import arg_parser
     from .lib import gen_libs
+    from .lib import gen_class
     from .mongo_lib import mongo_libs
     from .mongo_lib import mongo_class
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.arg_parser as arg_parser
     import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
     import mongo_lib.mongo_libs as mongo_libs
     import mongo_lib.mongo_class as mongo_class
     import version
@@ -172,8 +172,8 @@ def get_repset_name(svr_cfg):
         or from the Mongo database.
 
     Arguments:
-        (input) svr_cfg -> Server configuration module.
-        (output) rep_set -> Replication set name.
+        (input) svr_cfg -> Server configuration module
+        (output) rep_set -> Replication set name
 
     """
 
@@ -189,7 +189,10 @@ def get_repset_name(svr_cfg):
             svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
             port=svr_cfg.port, db="local", coll="system.replset",
             auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
-            use_arg=svr_cfg.use_arg, use_uri=svr_cfg.use_uri, **auth_mech)
+            ssl_client_ca=svr_cfg.ssl_client_ca,
+            ssl_client_cert=svr_cfg.ssl_client_cert,
+            ssl_client_key=svr_cfg.ssl_client_key,
+            ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
         status = coll.connect()
         rep_set = None
 
@@ -213,8 +216,8 @@ def get_repset_hosts(svr_cfg):
         to None.
 
     Arguments:
-        (input) svr_cfg -> Server Configuration module.
-        (output) repset_hosts -> Contain string of rep set hosts.
+        (input) svr_cfg -> Server Configuration module
+        (output) repset_hosts -> Contain string of rep set hosts
 
     """
 
@@ -227,7 +230,7 @@ def get_repset_hosts(svr_cfg):
     return repset_hosts
 
 
-def insert_doc(repclu, args_array, **kwargs):
+def insert_doc(repclu, args, **kwargs):
 
     """Function:  insert_doc
 
@@ -237,32 +240,29 @@ def insert_doc(repclu, args_array, **kwargs):
         insert multiple external JSON document files into the database.
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance.
-        (input) args_array -> Array of command line options and values.
+        (input) repclu -> Replication set/cluster instance
+        (input) args -> ArgParser class instance
         (input) kwargs:
-            opt_arg -> Contains list of optional arguments for command line.
-            opt_rep -> Contains list of replaceable arguments for command line.
+            opt_arg -> Contains list of optional arguments for command line
+            opt_rep -> Contains list of replaceable arguments for command line
 
     """
 
-    args_array = dict(args_array)
-    subinst = gen_libs.get_inst(subprocess)
-
-    if args_array.get("-f", None):
-        cmd = mongo_libs.create_cmd(repclu, args_array, "mongoimport", "-p",
-                                    use_repset=True, **kwargs)
+    if args.arg_exist("-f"):
+        cmd = mongo_libs.create_cmd(
+            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
         orig_cmd = list(cmd)
 
-        # Process files and add --file option.
-        for fname in args_array["-f"]:
+        # Process files and add --file option
+        for fname in args.get_val("-f"):
             upd_cmd = gen_libs.add_cmd(
                 cmd, arg=kwargs.get("opt_rep")["-f"], val=fname)
-            proc1 = subinst.Popen(upd_cmd)
+            proc1 = subprocess.Popen(upd_cmd)
             proc1.wait()
             cmd = list(orig_cmd)
 
 
-def process_args(args_array):
+def process_args(args):
 
     """Function:  process_args
 
@@ -270,50 +270,43 @@ def process_args(args_array):
         into search criteria string.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (output) status -> True|False - If an error has occurred.
-        (output) qry -> Mongo search query criteria.
+        (input) args -> ArgParser class instance
+        (output) status -> True|False - If an error has occurred
+        (output) qry -> Mongo search query criteria
 
     """
 
-    args_array = dict(args_array)
     status = False
     qry = {}
 
-    # Process key|value pairs.
+    # Process key|value pairs
     for item in range(1, 6):
         key = "-k" + str(item)
         val = "-l" + str(item)
+        sub_qry = dict()
 
-        # Missing -kN, but have -lN.
-        if key not in args_array and val in args_array:
+        # Only create if have key and value associated
+        if args.arg_exist(key) and args.arg_exist(val):
+            sub_qry["$in"] = args.get_val(val)
+            qry[args.get_val(key)] = sub_qry
+            status = False
+
+        # Missing key, but have value
+        elif not args.arg_exist(key) and args.arg_exist(val):
             print("WARNING: Missing key for value: %s = '%s'"
-                  % (val, args_array[val]))
+                  % (val, args.get_val(val)))
             status = True
-            break
 
-        # -kN option is missing, skip.
-        elif key not in args_array:
-            continue
-
-        sub_qry = {}
-
-        # Create list of value(s) for key.
-        try:
-            sub_qry["$in"] = args_array[val]
-
-        except KeyError:
+        # Have key, but missing value
+        elif args.arg_exist(key) and not args.arg_exist(val):
             print("WARNING: Missing value for key: %s = '%s'"
-                  % (key, args_array[key]))
+                  % (val, args.get_val(val)))
             status = True
-            break
-
-        qry[args_array[key]] = sub_qry
 
     return status, qry
 
 
-def delete_docs(repclu, args_array, **kwargs):
+def delete_docs(repclu, args, **kwargs):
 
     """Function:  delete_docs
 
@@ -323,37 +316,39 @@ def delete_docs(repclu, args_array, **kwargs):
         set of value(s).
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance.
-        (input) args_array -> Array of command line options and values.
+        (input) repclu -> Replication set/cluster instance
+        (input) args -> ArgParser class instance
         (input) kwargs:
-            opt_arg -> Contains list of optional arguments for command line.
-            opt_rep -> Contains list of replaceable arguments for command line.
+            opt_arg -> Contains list of optional arguments for command line
+            opt_rep -> Contains list of replaceable arguments for command line
 
     """
 
-    args_array = dict(args_array)
     coll = mongo_class.RepSetColl(
         repclu.name, repclu.user, repclu.japd, host=repclu.host,
         port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-        repset_hosts=repclu.repset_hosts, db=args_array.get("-b"),
-        auth_db=args_array.get("-a", args_array.get("-b")),
-        use_arg=repclu.use_arg, use_uri=repclu.use_uri,
-        coll=args_array.get("-t"), auth_mech=repclu.auth_mech)
+        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
+        auth_db=args.get_val("-a", def_val=repclu.auth_db),
+        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
+        ssl_client_ca=repclu.ssl_client_ca,
+        ssl_client_cert=repclu.ssl_client_cert,
+        ssl_client_key=repclu.ssl_client_key,
+        ssl_client_phrase=repclu.ssl_client_phrase)
     status = coll.connect()
 
     if status[0]:
-        if args_array.get("-f", None):
+        if args.arg_exist("-f"):
 
-            for fname in args_array["-f"]:
+            for fname in args.get_val("-f"):
                 lines = gen_libs.file_2_list(fname)
 
-                # Process each line as a delete.
+                # Process each line as a delete
                 for qry in lines:
                     coll.coll_del_many(gen_libs.str_2_type(qry))
 
-        # Assume -kN and -lN options.
+        # Assume -kN and -lN options
         else:
-            status, qry = process_args(args_array)
+            status, qry = process_args(args)
 
             if not status:
                 coll.coll_del_many(qry)
@@ -364,34 +359,35 @@ def delete_docs(repclu, args_array, **kwargs):
         print("delete_docs: Connection failure:  %s" % (status[1]))
 
 
-def truncate_coll(repclu, args_array, **kwargs):
+def truncate_coll(repclu, args, **kwargs):
 
     """Function:  truncate_coll
 
     Description:  Truncate a collection in a Mongo database.
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance.
-        (input) args_array -> Array of command line options and values.
+        (input) repclu -> Replication set/cluster instance
+        (input) args -> ArgParser class instance
         (input) kwargs:
-            opt_arg -> Contains list of optional arguments for command line.
-            opt_rep -> Contains list of replaceable arguments for command line.
+            opt_arg -> Contains list of optional arguments for command line
+            opt_rep -> Contains list of replaceable arguments for command line
 
     """
 
-    args_array = dict(args_array)
     coll = mongo_class.RepSetColl(
         repclu.name, repclu.user, repclu.japd, host=repclu.host,
         port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-        repset_hosts=repclu.repset_hosts, db=args_array.get("-b"),
-        coll=args_array.get("-t"),
-        auth_db=args_array.get("-a", args_array.get("-b")),
-        use_arg=repclu.use_arg, use_uri=repclu.use_uri,
-        auth_mech=repclu.auth_mech)
+        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
+        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
+        auth_db=args.get_val("-a", def_val=repclu.auth_db),
+        ssl_client_ca=repclu.ssl_client_ca,
+        ssl_client_cert=repclu.ssl_client_cert,
+        ssl_client_key=repclu.ssl_client_key,
+        ssl_client_phrase=repclu.ssl_client_phrase)
     status = coll.connect()
 
     if status[0]:
-        # Require override option.
+        # Require override option
         coll.coll_del_many({}, True)
         mongo_libs.disconnect([coll])
 
@@ -399,43 +395,45 @@ def truncate_coll(repclu, args_array, **kwargs):
         print("truncate_coll: Connection failure:  %s" % (status[1]))
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args, func_dict, **kwargs):
 
     """Function:  run_program
 
     Description:  Creates class instance(s) and controls flow of the program.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dictionary list of functions and options
         (input) kwargs:
-            opt_arg -> Contains list of optional arguments for command line.
-            opt_rep -> Contains list of replaceable arguments for command line.
+            opt_arg -> Contains list of optional arguments for command line
+            opt_rep -> Contains list of replaceable arguments for command line
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
-    svr_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    svr_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     rep_set = get_repset_name(svr_cfg)
     repset_hosts = get_repset_hosts(svr_cfg)
 
-    # Only pass authorization mechanism if present.
+    # Only pass authorization mechanism if present
     auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
         svr_cfg, "auth_mech") else {}
 
     repclu = mongo_class.RepSet(
         svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
         port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
-        repset_hosts=repset_hosts, use_arg=svr_cfg.use_arg,
-        auth_db=args_array.get("-a", args_array.get("-b")),
-        use_uri=svr_cfg.use_uri, **auth_mech)
+        repset_hosts=repset_hosts,
+        auth_db=args.get_val("-a", def_val=svr_cfg.auth_db),
+        ssl_client_ca=svr_cfg.ssl_client_ca,
+        ssl_client_cert=svr_cfg.ssl_client_cert,
+        ssl_client_key=svr_cfg.ssl_client_key,
+        ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
     status = repclu.connect()
 
     if status[0]:
         # Intersect args_array & func_dict to determine which functions to call
-        for func in set(args_array.keys()) & set(func_dict.keys()):
-            func_dict[func](repclu, args_array, **kwargs)
+        for func in set(args.get_args_keys()) & set(func_dict.keys()):
+            func_dict[func](repclu, args, **kwargs)
 
         mongo_libs.disconnect([repclu])
 
@@ -451,55 +449,57 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        file_chk_list -> contains the options which will have files included.
-        func_dict -> dictionary list for the function calls or other options.
-        opt_arg_list-> contains list of optional arguments for command line.
-        opt_arg_rep -> contains list of replaceable arguments for command line.
-        opt_con_req_list -> contains the options that require other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_req_list -> contains the options that are required for the program.
-        opt_val_list -> contains options which require values.
-        opt_xor_dict -> contains options which are XOR with its values.
-        xor_noreq_list -> contains options that are XOR, but are not required.
+        dir_perms_chk -> contains directories and their octal permissions
+        file_perm_chk -> file check options with their perms in octal
+        func_dict -> dictionary list for the function calls or other options
+        opt_arg_list-> contains list of optional arguments for command line
+        opt_arg_rep -> contains list of replaceable arguments for command line
+        opt_con_req_list -> contains the options that require other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_req_list -> contains the options that are required for the program
+        opt_val_list -> contains options which require values
+        opt_xor_dict -> contains options which are XOR with its values
+        xor_noreq_list -> contains options that are XOR, but are not required
 
     Arguments:
-        (input) argv -> Arguments from the command line.
+        (input) argv -> Arguments from the command line
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
-    dir_chk_list = ["-d", "-p"]
-    file_chk_list = ["-f"]
+    dir_perms_chk = {"-d": 5, "-p": 5}
+    file_perm_chk = {"-f": 6}
     func_dict = {"-I": insert_doc, "-D": delete_docs, "-T": truncate_coll}
-    opt_arg_list = {"-a": "--authenticationDatabase=", "-b": "--db=",
-                    "-t": "--collection="}
+    opt_arg_list = {
+        "-a": "--authenticationDatabase=", "-b": "--db=",
+        "-t": "--collection="}
     opt_arg_rep = {"-f": "--file="}
     opt_con_req_list = {"-k1": ["-l1"]}
     opt_multi_list = ["-f", "-l1", "-l2", "-l3", "-l4", "-l5"]
     opt_req_list = ["-b", "-c", "-d", "-t"]
-    opt_val_list = ["-a", "-b", "-c", "-d", "-f", "-k1", "-l1", "-p", "-t",
-                    "-k2", "-l2", "-k3", "-l3", "-k4", "-l4", "-k5", "-l5"]
+    opt_val_list = [
+        "-a", "-b", "-c", "-d", "-f", "-k1", "-l1", "-p", "-t", "-k2", "-l2",
+        "-k3", "-l3", "-k4", "-l4", "-k5", "-l5"]
     opt_xor_dict = {"-D": ["-I", "-T"], "-I": ["-D", "-T"], "-T": ["-D", "-I"]}
     xor_noreq_list = {"-k1": "-f"}
 
-    # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
-                                       multi_val=opt_multi_list)
+    # Process argument list from command line
+    args = gen_class.ArgParser(
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        do_parse=True)
 
-    # Remove dupe files.
-    if "-f" in args_array:
-        args_array["-f"] = gen_libs.rm_dup_list(args_array["-f"])
+    # Remove dupe files
+    if args.arg_exist("-f"):
+        args.update_arg("-f", gen_libs.rm_dup_list(args.get_val("-f")))
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and arg_parser.arg_xor_dict(args_array, opt_xor_dict) \
-       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-       and arg_parser.arg_noreq_xor(args_array, xor_noreq_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list):
-        run_program(args_array, func_dict, opt_arg=opt_arg_list,
-                    opt_rep=opt_arg_rep)
+    if not gen_libs.help_func(args, __version__, help_message)  \
+       and args.arg_require(opt_req=opt_req_list)               \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)        \
+       and args.arg_xor_dict(opt_xor_val=opt_xor_dict)          \
+       and args.arg_cond_req(opt_con_req=opt_con_req_list)      \
+       and args.arg_noreq_xor(xor_noreq=xor_noreq_list)         \
+       and args.arg_file_chk(file_perm_chk=file_perm_chk):
+        run_program(
+            args, func_dict, opt_arg=opt_arg_list, opt_rep=opt_arg_rep)
 
 
 if __name__ == "__main__":

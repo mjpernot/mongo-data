@@ -48,6 +48,56 @@ def insert_doc(repset, args_array):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "mysql_cfg", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return list(self.args_array.keys())
+
+
 class RepSet(object):
 
     """Class:  RepSet
@@ -116,8 +166,12 @@ class CfgTest(object):
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
-        self.use_arg = True
-        self.use_uri = False
+        self.repset_hosts = "localhost:27017,localhost:27016"
+        self.auth_db = "admin"
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class CfgTest2(object):
@@ -149,9 +203,12 @@ class CfgTest2(object):
         self.auth = True
         self.conf_file = "ConFile"
         self.repset = "RepSetName"
+        self.auth_db = "admin"
         self.auth_mech = "SCRAM-SHA-1"
-        self.use_arg = True
-        self.use_uri = False
+        self.ssl_client_ca = None
+        self.ssl_client_cert = None
+        self.ssl_client_key = None
+        self.ssl_client_phrase = None
 
 
 class UnitTest(unittest.TestCase):
@@ -163,6 +220,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_without_a_option
+        test_with_a_option
         test_connection_fail
         test_connection_success
         test_auth_mech
@@ -184,8 +243,61 @@ class UnitTest(unittest.TestCase):
         self.cfg = CfgTest()
         self.cfg2 = CfgTest2()
         self.repset = RepSet()
-        self.args_array = {"-I": True, "-c": "config", "-d": "dir/path"}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {"-I": True, "-c": "config", "-d": "dir/path"}
+        self.args2.args_array = {
+            "-I": True, "-c": "config", "-d": "dir/path", "-a": "auth_db"}
         self.func_names = {"-I": insert_doc}
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.get_repset_hosts")
+    @mock.patch("mongo_db_data.get_repset_name")
+    @mock.patch("mongo_db_data.mongo_class.RepSet")
+    def test_without_a_option(self, mock_repset, mock_name, mock_hosts,
+                              mock_load):
+
+        """Function:  test_without_a_option
+
+        Description:  Test without the -a option.
+
+        Arguments:
+
+        """
+
+        mock_repset.return_value = self.repset
+        mock_hosts.return_value = "RepSetHosts"
+        mock_name.return_value = "RepSetName"
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.get_repset_hosts")
+    @mock.patch("mongo_db_data.get_repset_name")
+    @mock.patch("mongo_db_data.mongo_class.RepSet")
+    def test_with_a_option(self, mock_repset, mock_name, mock_hosts,
+                           mock_load):
+
+        """Function:  test_with_a_option
+
+        Description:  Test with the -a option.
+
+        Arguments:
+
+        """
+
+        mock_repset.return_value = self.repset
+        mock_hosts.return_value = "RepSetHosts"
+        mock_name.return_value = "RepSetName"
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(
+            mongo_db_data.run_program(self.args2, self.func_names))
 
     @mock.patch("mongo_db_data.gen_libs.load_module")
     @mock.patch("mongo_db_data.get_repset_hosts")
@@ -211,8 +323,8 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = self.cfg
 
         with gen_libs.no_std_out():
-            self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                       self.func_names))
+            self.assertFalse(
+                mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -236,8 +348,7 @@ class UnitTest(unittest.TestCase):
         mock_name.return_value = "RepSetName"
         mock_load.return_value = self.cfg
 
-        self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_names))
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -260,8 +371,7 @@ class UnitTest(unittest.TestCase):
         mock_name.return_value = "RepSetName"
         mock_load.return_value = self.cfg2
 
-        self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_names))
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -284,8 +394,7 @@ class UnitTest(unittest.TestCase):
         mock_name.return_value = "RepSetName"
         mock_load.return_value = self.cfg
 
-        self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_names))
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -308,8 +417,7 @@ class UnitTest(unittest.TestCase):
         mock_name.return_value = "RepSetName"
         mock_load.return_value = self.cfg
 
-        self.assertFalse(mongo_db_data.run_program(self.args_array,
-                                                   self.func_names))
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
 
 if __name__ == "__main__":
