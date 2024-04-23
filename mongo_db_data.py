@@ -200,7 +200,10 @@ def get_repset_name(svr_cfg):
             ssl_client_ca=svr_cfg.ssl_client_ca,
             ssl_client_cert=svr_cfg.ssl_client_cert,
             ssl_client_key=svr_cfg.ssl_client_key,
-            ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
+            ssl_client_phrase=svr_cfg.ssl_client_phrase,
+            auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+            tls_certkey=svr_cfg.tls_certkey,
+            tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
         status = coll.connect()
         rep_set = None
 
@@ -341,7 +344,10 @@ def delete_docs(repclu, args, **kwargs):
         ssl_client_ca=repclu.ssl_client_ca,
         ssl_client_cert=repclu.ssl_client_cert,
         ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase)
+        ssl_client_phrase=repclu.ssl_client_phrase,
+        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+        tls_certkey=repclu.tls_certkey,
+        tls_certkey_phrase=repclu.tls_certkey_phrase)
     status = coll.connect()
 
     if status[0]:
@@ -391,7 +397,10 @@ def truncate_coll(repclu, args, **kwargs):
         ssl_client_ca=repclu.ssl_client_ca,
         ssl_client_cert=repclu.ssl_client_cert,
         ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase)
+        ssl_client_phrase=repclu.ssl_client_phrase,
+        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+        tls_certkey=repclu.tls_certkey,
+        tls_certkey_phrase=repclu.tls_certkey_phrase)
     status = coll.connect()
 
     if status[0]:
@@ -435,7 +444,10 @@ def run_program(args, func_dict, **kwargs):
         ssl_client_ca=svr_cfg.ssl_client_ca,
         ssl_client_cert=svr_cfg.ssl_client_cert,
         ssl_client_key=svr_cfg.ssl_client_key,
-        ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
+        ssl_client_phrase=svr_cfg.ssl_client_phrase,
+        auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+        tls_certkey=svr_cfg.tls_certkey,
+        tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
     status = repclu.connect()
 
     if status[0]:
