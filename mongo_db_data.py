@@ -90,15 +90,23 @@
             repset_hosts = "HOST1:PORT, HOST2:PORT, HOST3:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
 
-            Note:  If using SSL connections then set one or more of the
-                following entries.  This will automatically enable SSL
-                connections. Below are the configuration settings for SSL
-                connections.  See configuration file for details on each entry:
+            If Mongo is set to use TLS or SSL connections, then one or more of
+                the following entries will need to be completed to connect
+                using TLS or SSL protocols.
+                Note:  Read the configuration file to determine which entries
+                    will need to be set.
 
-            ssl_client_ca = None
-            ssl_client_key = None
-            ssl_client_cert = None
-            ssl_client_phrase = None
+                SSL:
+                    auth_type = None
+                    ssl_client_ca = None
+                    ssl_client_key = None
+                    ssl_client_cert = None
+                    ssl_client_phrase = None
+                TLS:
+                    auth_type = None
+                    tls_ca_certs = None
+                    tls_certkey = None
+                    tls_certkey_phrase = None
 
             Note:  FIPS Environment for Mongo.
               If operating in a FIPS 104-2 environment, this package will
@@ -192,7 +200,10 @@ def get_repset_name(svr_cfg):
             ssl_client_ca=svr_cfg.ssl_client_ca,
             ssl_client_cert=svr_cfg.ssl_client_cert,
             ssl_client_key=svr_cfg.ssl_client_key,
-            ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
+            ssl_client_phrase=svr_cfg.ssl_client_phrase,
+            auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+            tls_certkey=svr_cfg.tls_certkey,
+            tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
         status = coll.connect()
         rep_set = None
 
@@ -333,7 +344,10 @@ def delete_docs(repclu, args, **kwargs):
         ssl_client_ca=repclu.ssl_client_ca,
         ssl_client_cert=repclu.ssl_client_cert,
         ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase)
+        ssl_client_phrase=repclu.ssl_client_phrase,
+        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+        tls_certkey=repclu.tls_certkey,
+        tls_certkey_phrase=repclu.tls_certkey_phrase)
     status = coll.connect()
 
     if status[0]:
@@ -383,7 +397,10 @@ def truncate_coll(repclu, args, **kwargs):
         ssl_client_ca=repclu.ssl_client_ca,
         ssl_client_cert=repclu.ssl_client_cert,
         ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase)
+        ssl_client_phrase=repclu.ssl_client_phrase,
+        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+        tls_certkey=repclu.tls_certkey,
+        tls_certkey_phrase=repclu.tls_certkey_phrase)
     status = coll.connect()
 
     if status[0]:
@@ -427,7 +444,10 @@ def run_program(args, func_dict, **kwargs):
         ssl_client_ca=svr_cfg.ssl_client_ca,
         ssl_client_cert=svr_cfg.ssl_client_cert,
         ssl_client_key=svr_cfg.ssl_client_key,
-        ssl_client_phrase=svr_cfg.ssl_client_phrase, **auth_mech)
+        ssl_client_phrase=svr_cfg.ssl_client_phrase,
+        auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+        tls_certkey=svr_cfg.tls_certkey,
+        tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
     status = repclu.connect()
 
     if status[0]:
