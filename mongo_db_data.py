@@ -1,7 +1,25 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  mongo_db_data.py
+# Shell commands follow
+# Next line is bilingual: it starts a comment in Python & is a no-op in shell
+""":"
+
+# Find a suitable python interpreter (can adapt for specific needs)
+# NOTE: Ignore this section if passing the -h option to the program.
+#   This code must be included in the program's initial docstring.
+for cmd in python3.12 python3.9 ; do
+   command -v > /dev/null $cmd && exec $cmd $0 "$@"
+done
+
+echo "OMG Python not found, exiting...."
+
+exit 2
+
+# Previous line is bilingual: it ends a comment in Python & is a no-op in shell
+# Shell commands end here
+
+   Program:  mongo_db_data.py
 
     Description:  Program to either take a external JSON document and insert
         into a Mongo database, delete a document from a Mongo database
@@ -129,12 +147,11 @@
     Example:
         mongo_db_data.py -c mongo -d config -b GMI -t FAC -f ins_doc -I
 
-    """
+":"""
+# Python program follows
 
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -149,10 +166,10 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import mongo_lib.mongo_libs as mongo_libs
-    import mongo_lib.mongo_class as mongo_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import mongo_lib.mongo_libs as mongo_libs           # pylint:disable=R0402
+    import mongo_lib.mongo_class as mongo_class         # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -214,7 +231,7 @@ def get_repset_name(svr_cfg):
             mongo_libs.disconnect([coll])
 
         else:
-            print("get_repset_name: Connection failure:  %s" % (status[1]))
+            print(f"get_repset_name: Connection failure:  {status[1]}")
 
     return rep_set
 
@@ -268,7 +285,7 @@ def insert_doc(repclu, args, **kwargs):
         for fname in args.get_val("-f"):
             upd_cmd = gen_libs.add_cmd(
                 cmd, arg=kwargs.get("opt_rep")["-f"], val=fname)
-            proc1 = subprocess.Popen(upd_cmd)
+            proc1 = subprocess.Popen(upd_cmd)           # pylint:disable=R1732
             proc1.wait()
             cmd = list(orig_cmd)
 
@@ -294,7 +311,7 @@ def process_args(args):
     for item in range(1, 6):
         key = "-k" + str(item)
         val = "-l" + str(item)
-        sub_qry = dict()
+        sub_qry = {}
 
         # Only create if have key and value associated
         if args.arg_exist(key) and args.arg_exist(val):
@@ -304,20 +321,20 @@ def process_args(args):
 
         # Missing key, but have value
         elif not args.arg_exist(key) and args.arg_exist(val):
-            print("WARNING: Missing key for value: %s = '%s'"
-                  % (val, args.get_val(val)))
+            print(f"WARNING: Missing key for value: {val} ="
+                  f" {args.get_val(val)}")
             status = True
 
         # Have key, but missing value
         elif args.arg_exist(key) and not args.arg_exist(val):
-            print("WARNING: Missing value for key: %s = '%s'"
-                  % (val, args.get_val(val)))
+            print(f"WARNING: Missing value for key: {val} ="
+                  f" {args.get_val(val)}")
             status = True
 
     return status, qry
 
 
-def delete_docs(repclu, args, **kwargs):
+def delete_docs(repclu, args, **kwargs):                # pylint:disable=W0613
 
     """Function:  delete_docs
 
@@ -370,10 +387,10 @@ def delete_docs(repclu, args, **kwargs):
         mongo_libs.disconnect([coll])
 
     else:
-        print("delete_docs: Connection failure:  %s" % (status[1]))
+        print(f"delete_docs: Connection failure:  {status[1]}")
 
 
-def truncate_coll(repclu, args, **kwargs):
+def truncate_coll(repclu, args, **kwargs):              # pylint:disable=W0613
 
     """Function:  truncate_coll
 
@@ -409,7 +426,7 @@ def truncate_coll(repclu, args, **kwargs):
         mongo_libs.disconnect([coll])
 
     else:
-        print("truncate_coll: Connection failure:  %s" % (status[1]))
+        print(f"truncate_coll: Connection failure:  {status[1]}")
 
 
 def run_program(args, func_dict, **kwargs):
@@ -458,7 +475,7 @@ def run_program(args, func_dict, **kwargs):
         mongo_libs.disconnect([repclu])
 
     else:
-        print("run_program: Connection failure:  %s" % (status[1]))
+        print(f"run_program: Connection failure:  {status[1]}")
 
 
 def main():

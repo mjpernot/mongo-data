@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mongo_db_data
-import lib.gen_libs as gen_libs
-import version
+import mongo_db_data                            # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Coll2(object):
+class Coll2():
 
     """Class:  Coll2
 
@@ -94,7 +94,7 @@ class Coll2(object):
         return self.status, self.err_msg
 
 
-class Coll(object):
+class Coll():
 
     """Class:  Coll
 
@@ -160,7 +160,7 @@ class Coll(object):
         return self.status, self.err_msg
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -199,7 +199,7 @@ class CfgTest(object):
         self.tls_certkey_phrase = None
 
 
-class CfgTest2(object):
+class CfgTest2():                                       # pylint:disable=R0903
 
     """Class:  CfgTest2
 
@@ -237,7 +237,7 @@ class CfgTest2(object):
         self.tls_certkey_phrase = None
 
 
-class CfgTest3(object):
+class CfgTest3():                                       # pylint:disable=R0903
 
     """Class:  CfgTest3
 
@@ -327,7 +327,7 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = self.coll
 
         with gen_libs.no_std_out():
-            self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
+            self.assertIsNone(mongo_db_data.get_repset_name(self.cfg2))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
@@ -398,7 +398,7 @@ class UnitTest(unittest.TestCase):
         mock_coll.return_value = self.coll2
         mock_disconnect.return_value = True
 
-        self.assertEqual(mongo_db_data.get_repset_name(self.cfg2), None)
+        self.assertIsNone(mongo_db_data.get_repset_name(self.cfg2))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect")
     @mock.patch("mongo_db_data.mongo_class.Coll")
