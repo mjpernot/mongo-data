@@ -14,6 +14,9 @@ Breaking changes.
 - Updated python-lib v4.0.0
 - Updated mongo-lib v4.5.0
 
+### Added
+- Support for Mongo 7.0
+
 ### Changed
 - process_args: Replaced dict() with {}.
 - Converted strings to f-strings.
