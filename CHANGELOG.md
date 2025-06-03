@@ -15,6 +15,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program: Create mongo_class.RepSetColl or mongo_class.Coll depending on settings in configuration file and removed mongo_class.RepSet creation.
 
 ### Changed
+- main: Removed checking for duplicates in the -f argument, removed parsing from gen_class.ArgParser creation and to arg_parse2 call.
 - insert_doc: Replaced mongo_class.RepSetColl with collection instance passed to function and determine if standalone or replica set is being used.
 - delete_docs, truncate_coll: Replaced mongo_class.RepSetColl with collection instance passed to function.
 - run_program: Removed check on auth_mech setting and removed calls to get_repset_name and get_repset_hosts.

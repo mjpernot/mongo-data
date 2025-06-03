@@ -44,6 +44,7 @@ class ArgParser():
         arg_require
         arg_xor_dict
         arg_noreq_xor
+        arg_parse2
 
     """
 
@@ -76,6 +77,7 @@ class ArgParser():
         self.opt_con_req2 = True
         self.xor_noreq = None
         self.xor_noreq2 = True
+        self.argparse2 = True
 
     def get_val(self, skey, def_val=None):
 
@@ -198,6 +200,18 @@ class ArgParser():
 
         return self.xor_noreq2
 
+    def arg_parse2(self):
+
+        """Method:  arg_parse2
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_parse2.
+
+        Arguments:
+
+        """
+
+        return self.argparse2
+
 
 class UnitTest(unittest.TestCase):
 
@@ -207,6 +221,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_arg_parse2_false
+        test_arg_parse2_true
         test_help_true
         test_help_false
         test_arg_req_false
@@ -221,7 +237,6 @@ class UnitTest(unittest.TestCase):
         test_arg_noreq_xor_true
         test_arg_file_chk_true
         test_arg_file_chk_false
-        test_process_f_option
         test_run_program
 
     """
@@ -237,9 +252,41 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-        self.args2 = ArgParser()
         self.args.args_array = {"-c": "CfgFile", "-d": "CfgDir"}
-        self.args2.args_array = {"-c": "CfgFile", "-d": "CfgDir", "-f": True}
+
+    @mock.patch("mongo_db_data.gen_class.ArgParser")
+    def test_arg_parse2_false(self, mock_arg):
+
+        """Function:  test_arg_parse2_false
+
+        Description:  Test arg_parse2 returns false.
+
+        Arguments:
+
+        """
+
+        self.args.argparse2 = False
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(mongo_db_data.main())
+
+    @mock.patch("mongo_db_data.gen_libs.help_func",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_class.ArgParser")
+    def test_arg_parse2_true(self, mock_arg):
+
+        """Function:  test_arg_parse2_true
+
+        Description:  Test arg_parse2 returns true.
+
+        Arguments:
+
+        """
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(mongo_db_data.main())
 
     @mock.patch("mongo_db_data.gen_libs.help_func",
                 mock.Mock(return_value=True))
@@ -501,26 +548,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_arg.return_value = self.args
-
-        self.assertFalse(mongo_db_data.main())
-
-    @mock.patch("mongo_db_data.gen_libs.help_func",
-                mock.Mock(return_value=False))
-    @mock.patch("mongo_db_data.run_program", mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.gen_libs")
-    @mock.patch("mongo_db_data.gen_class.ArgParser")
-    def test_process_f_option(self, mock_arg, mock_lib):
-
-        """Function:  test_process_f_option
-
-        Description:  Test with processing -f option.
-
-        Arguments:
-
-        """
-
-        mock_arg.return_value = self.args2
-        mock_lib.rm_dup_list.return_value = ["File1"]
 
         self.assertFalse(mongo_db_data.main())
 
