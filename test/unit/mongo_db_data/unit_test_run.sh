@@ -7,8 +7,6 @@
 echo ""
 echo "Unit testing..."
 /usr/bin/python test/unit/mongo_db_data/delete_docs.py
-/usr/bin/python test/unit/mongo_db_data/get_repset_hosts.py
-/usr/bin/python test/unit/mongo_db_data/get_repset_name.py
 /usr/bin/python test/unit/mongo_db_data/help_message.py
 /usr/bin/python test/unit/mongo_db_data/insert_doc.py
 /usr/bin/python test/unit/mongo_db_data/main.py
