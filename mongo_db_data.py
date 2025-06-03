@@ -276,9 +276,14 @@ def insert_doc(coll, args, **kwargs):
 
     """
 
+    use_repset=False
+
+    if isinstance(coll, mongo_class.RepSetColl):
+        use_repset=True
+
     if args.arg_exist("-f"):
         cmd = mongo_libs.create_cmd(
-            coll, args, "mongoimport", "-p", use_repset=True, **kwargs)
+            coll, args, "mongoimport", "-p", use_repset=use_repset, **kwargs)
 #        cmd = mongo_libs.create_cmd(
 #            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
         orig_cmd = list(cmd)
