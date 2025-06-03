@@ -450,13 +450,19 @@ def run_program(args, func_dict, **kwargs):
 
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-    mongo_cls = mongo_class.Coll
 
     if cfg.repset:
-        mongo_cls = mongo_class.RepSetColl
+        coll = mongo_libs.create_instance(
+            args.get_val("-c"), args.get_val("-d"), mongo_class.RepSetColl)
+        coll.coll_db = args.get_val("-b")
+        coll.coll_coll = args.get_val("-t")
 
-    coll = mongo_libs.create_instance(
-        args.get_val("-c"), args.get_val("-d"), mongo_cls)
+    else:
+        coll = mongo_libs.create_instance(
+            args.get_val("-c"), args.get_val("-d"), mongo_class.Coll)
+        coll.db_name = args.get_val("-b")
+        coll.coll = args.get_val("-t")
+
     status = coll.connect()
 
 #    svr_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
