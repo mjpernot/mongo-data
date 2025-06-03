@@ -454,14 +454,14 @@ def run_program(args, func_dict, **kwargs):
     if cfg.repset:
         coll = mongo_libs.create_instance(
             args.get_val("-c"), args.get_val("-d"), mongo_class.RepSetColl)
-        coll.coll_db = args.get_val("-b")
-        coll.coll_coll = args.get_val("-t")
+        coll.db_name = args.get_val("-b")
+        coll.coll = args.get_val("-t")
 
     else:
         coll = mongo_libs.create_instance(
             args.get_val("-c"), args.get_val("-d"), mongo_class.Coll)
-        coll.db_name = args.get_val("-b")
-        coll.coll = args.get_val("-t")
+        coll.coll_db = args.get_val("-b")
+        coll.coll_coll = args.get_val("-t")
 
     status = coll.connect()
 
