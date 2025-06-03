@@ -5,6 +5,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [5.0.0] - 2025-06-03
+- Breaking changes
 - Major refactoring of program to handle standalone or replica set Mongo databases.
 - Updated to work with pymongo v4.X
 - Updated mongo-lib to v4.5.3

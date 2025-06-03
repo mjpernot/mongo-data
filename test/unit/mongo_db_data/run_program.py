@@ -98,11 +98,11 @@ class ArgParser():
         return list(self.args_array.keys())
 
 
-class Server():                                         # pylint:disable=R0903
+class RepSetColl():                                     # pylint:disable=R0903
 
-    """Class:  Server
+    """Class:  RepSetColl
 
-    Description:  Class stub holder for mongo_class.Server class.
+    Description:  Class stub holder for mongo_class.RepSetColl class.
 
     Methods:
         __init__
@@ -123,6 +123,8 @@ class Server():                                         # pylint:disable=R0903
         self.name = "name"
         self.status = True
         self.err_msg = None
+        self.db_name = None
+        self.coll = None
 
     def connect(self):
 
@@ -137,9 +139,50 @@ class Server():                                         # pylint:disable=R0903
         return self.status, self.err_msg
 
 
-class CfgTest():                                        # pylint:disable=R0903
+class Coll():                                            # pylint:disable=R0903
 
-    """Class:  CfgTest
+    """Class:  Coll
+
+    Description:  Class stub holder for mongo_class.Coll class.
+
+    Methods:
+        __init__
+        connect
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.name = "name"
+        self.status = True
+        self.err_msg = None
+        self.coll_db = None
+        self.coll_coll = None
+
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub method holder for mongo_class.Server.connect.
+
+        Arguments:
+
+        """
+
+        return self.status, self.err_msg
+
+
+class Cfg():                                            # pylint:disable=R0903
+
+    """Class:  Cfg
 
     Description:  Class which is a representation of a cfg module.
 
@@ -152,7 +195,7 @@ class CfgTest():                                        # pylint:disable=R0903
 
         """Method:  __init__
 
-        Description:  Initialization instance of the CfgTest class.
+        Description:  Initialization instance of the Cfg class.
 
         Arguments:
 
@@ -178,9 +221,9 @@ class CfgTest():                                        # pylint:disable=R0903
         self.tls_certkey_phrase = None
 
 
-class CfgTest2():                                       # pylint:disable=R0903
+class Cfg2():                                          # pylint:disable=R0903
 
-    """Class:  CfgTest2
+    """Class:  Cfg2
 
     Description:  Class which is a representation of a cfg module.
 
@@ -193,7 +236,7 @@ class CfgTest2():                                       # pylint:disable=R0903
 
         """Method:  __init__
 
-        Description:  Initialization instance of the CfgTest class.
+        Description:  Initialization instance of the Cfg2 class.
 
         Arguments:
 
@@ -206,7 +249,7 @@ class CfgTest2():                                       # pylint:disable=R0903
         self.port = 27017
         self.auth = True
         self.conf_file = "ConFile"
-        self.repset = "RepSetName"
+        self.repset = None
         self.auth_db = "admin"
         self.auth_mech = "SCRAM-SHA-1"
         self.ssl_client_ca = None
@@ -228,14 +271,13 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_connection_success
+        test_connection_fail_rep
+        test_connection_fail_nonrep
+        test_connection_success_rep
+        test_connection_success_nonrep
 
         test_without_a_option
         test_with_a_option
-        test_connection_fail
-        
-        test_auth_mech
-        test_no_auth_mech
         test_run_program
 
     """
@@ -250,9 +292,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.cfg = CfgTest()
-        self.cfg2 = CfgTest2()
-        self.repset = RepSet()
+        self.cfg = Cfg()
+        self.cfg2 = Cfg2()
+        self.mongorep = RepSetColl()
+        self.mongo = Coll()
         self.args = ArgParser()
         self.args2 = ArgParser()
         self.args.args_array = {"-I": True, "-c": "config", "-d": "dir/path"}
@@ -260,96 +303,45 @@ class UnitTest(unittest.TestCase):
             "-I": True, "-c": "config", "-d": "dir/path", "-a": "auth_db"}
         self.func_names = {"-I": insert_doc}
 
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_connection_success(self, mock_repset, mock_load):
+    @mock.patch("mongo_db_data.mongo_libs.create_instance")
+    def test_connection_fail_rep(self, mock_coll, mock_load):
 
-        """Function:  test_connection_success
+        """Function:  test_connection_fail_rep
 
-        Description:  Test with successful connection.
+        Description:  Test with failed connection in replica set.
 
         Arguments:
 
         """
 
-        mock_repset.return_value = self.repset
+        self.mongorep.status = False
+        self.mongorep.err_msg = "Error Connection Message"
+
+        mock_coll.return_value = self.mongorep
         mock_load.return_value = self.cfg
 
-        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                mongo_db_data.run_program(self.args, self.func_names))
 
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_without_a_option(self, mock_repset, mock_name, mock_hosts,
-                              mock_load):
+    @mock.patch("mongo_db_data.mongo_libs.create_instance")
+    def test_connection_fail_nonrep(self, mock_coll, mock_load):
 
-        """Function:  test_without_a_option
+        """Function:  test_connection_fail_nonrep
 
-        Description:  Test without the -a option.
+        Description:  Test with failed connection in standalone node.
 
         Arguments:
 
         """
 
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
+        self.mongo.status = False
+        self.mongo.err_msg = "Error Connection Message"
 
-        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
-
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_with_a_option(self, mock_repset, mock_name, mock_hosts,
-                           mock_load):
-
-        """Function:  test_with_a_option
-
-        Description:  Test with the -a option.
-
-        Arguments:
-
-        """
-
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
-
-        self.assertFalse(
-            mongo_db_data.run_program(self.args2, self.func_names))
-
-    @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_connection_fail(self, mock_repset, mock_name, mock_hosts,
-                             mock_load):
-
-        """Function:  test_connection_fail
-
-        Description:  Test with failed connection.
-
-        Arguments:
-
-        """
-
-        self.repset.status = False
-        self.repset.err_msg = "Error Connection Message"
-
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
+        mock_coll.return_value = self.mongo
+        mock_load.return_value = self.cfg2
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -358,69 +350,38 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_auth_mech(self, mock_repset, mock_name, mock_hosts, mock_load):
+    @mock.patch("mongo_db_data.mongo_libs.create_instance")
+    def test_connection_success_rep(self, mock_coll, mock_load):
 
-        """Function:  test_auth_mech
+        """Function:  test_connection_success_rep
 
-        Description:  Test with auth_mech passed.
+        Description:  Test with successful connection in replica set.
 
         Arguments:
 
         """
 
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
+        mock_coll.return_value = self.mongorep
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.mongo_libs.create_instance")
+    def test_connection_success_nonrep(self, mock_coll, mock_load):
+
+        """Function:  test_connection_success_nonrep
+
+        Description:  Test with successful connection in standalone node.
+
+        Arguments:
+
+        """
+
+        mock_coll.return_value = self.mongo
         mock_load.return_value = self.cfg2
-
-        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
-
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_no_auth_mech(self, mock_repset, mock_name, mock_hosts, mock_load):
-
-        """Function:  test_no_auth_mech
-
-        Description:  Test with no auth_mech passed.
-
-        Arguments:
-
-        """
-
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
-
-        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
-
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_run_program(self, mock_repset, mock_name, mock_hosts, mock_load):
-
-        """Function:  test_run_program
-
-        Description:  Test run_program function.
-
-        Arguments:
-
-        """
-
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
 
         self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 

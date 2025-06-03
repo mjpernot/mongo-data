@@ -189,73 +189,73 @@ def help_message():
     print(__doc__)
 
 
-def get_repset_name(svr_cfg):
+#def get_repset_name(svr_cfg):
 
-    """Function:  get_repset_name
+#    """Function:  get_repset_name
 
-    Description:  Fetch the Replication Set Name from the condfiguration file
-        or from the Mongo database.
+#    Description:  Fetch the Replication Set Name from the condfiguration file
+#        or from the Mongo database.
 
-    Arguments:
-        (input) svr_cfg -> Server configuration module
-        (output) rep_set -> Replication set name
+#    Arguments:
+#        (input) svr_cfg -> Server configuration module
+#        (output) rep_set -> Replication set name
 
-    """
+#    """
 
     # Only pass authorization mechanism if present.
-    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
-        svr_cfg, "auth_mech") else {}
+#    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
+#        svr_cfg, "auth_mech") else {}
 
-    try:
-        rep_set = svr_cfg.repset
+#    try:
+#        rep_set = svr_cfg.repset
 
-    except AttributeError:
-        coll = mongo_class.Coll(
-            svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
-            port=svr_cfg.port, db="local", coll="system.replset",
-            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
-            ssl_client_ca=svr_cfg.ssl_client_ca,
-            ssl_client_cert=svr_cfg.ssl_client_cert,
-            ssl_client_key=svr_cfg.ssl_client_key,
-            ssl_client_phrase=svr_cfg.ssl_client_phrase,
-            auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
-            tls_certkey=svr_cfg.tls_certkey,
-            tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
-        status = coll.connect()
-        rep_set = None
+#    except AttributeError:
+#        coll = mongo_class.Coll(
+#            svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
+#            port=svr_cfg.port, db="local", coll="system.replset",
+#            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
+#            ssl_client_ca=svr_cfg.ssl_client_ca,
+#            ssl_client_cert=svr_cfg.ssl_client_cert,
+#            ssl_client_key=svr_cfg.ssl_client_key,
+#            ssl_client_phrase=svr_cfg.ssl_client_phrase,
+#            auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+#            tls_certkey=svr_cfg.tls_certkey,
+#            tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
+#        status = coll.connect()
+#        rep_set = None
 
-        if status[0]:
-            if coll.coll_cnt() != 0:
-                rep_set = coll.coll_find1().get("_id")
+#        if status[0]:
+#            if coll.coll_cnt() != 0:
+#                rep_set = coll.coll_find1().get("_id")
 
-            mongo_libs.disconnect([coll])
+#            mongo_libs.disconnect([coll])
 
-        else:
-            print(f"get_repset_name: Connection failure:  {status[1]}")
+#        else:
+#            print(f"get_repset_name: Connection failure:  {status[1]}")
 
-    return rep_set
+#    return rep_set
 
 
-def get_repset_hosts(svr_cfg):
+#def get_repset_hosts(svr_cfg):
 
-    """Function:  get_repset_hosts
+#    """Function:  get_repset_hosts
 
-    Description:  See if the Rep Set hosts is in the config file, otherwise set
-        to None.
+#    Description:  See if the Rep Set hosts is in the config file, otherwise set
+#        to None.
 
-    Arguments:
-        (input) svr_cfg -> Server Configuration module
-        (output) repset_hosts -> Contain string of rep set hosts
+#    Arguments:
+#        (input) svr_cfg -> Server Configuration module
+#        (output) repset_hosts -> Contain string of rep set hosts
 
-    """
+#    """
 
-    try:
-        repset_hosts = svr_cfg.repset_hosts
+#    try:
+#        repset_hosts = svr_cfg.repset_hosts
 
-    except AttributeError:
-        repset_hosts = None
+#    except AttributeError:
+#        repset_hosts = None
 
-    return repset_hosts
+#    return repset_hosts
 
 
 def insert_doc(coll, args, **kwargs):
