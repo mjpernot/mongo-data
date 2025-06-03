@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [5.0.0] - 2025-06-03
+- Major refactoring of program to handle standalone or replica set Mongo databases.
+- Updated to work with pymongo v4.X
+- Updated mongo-lib to v4.5.2
+- Updated python-lib to v4.0.1
+
+### Fixed
+- run_program: Create mongo_class.RepSetColl or mongo_class.Coll depending on settings in configuration file and removed mongo_class.RepSet creation.
+
+### Changed
+- insert_doc, delete_docs, truncate_coll: Replaced mongo_class.RepSetColl with collection instance passed to function.
+- run_program: Removed check on auth_mech setting and removed calls to get_repset_name and get_repset_hosts.
+- Documentation changes.
+
+### Removed
+- Removed get_repset_name function.
+- Removed get_repset_hosts function.
+
+
 ## [4.0.1] - 2025-03-11
 - Updated mongo-libs to v4.5.1
 

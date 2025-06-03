@@ -23,7 +23,7 @@ auth_db = "admin"
 # Authentication mechanism
 #   Current values allowed:  SCRAM-SHA-1, SCRAM-SHA-256
 #   NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
-#   NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
+#   NOTE 2:  Secure environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
 auth_mech = "SCRAM-SHA-1"
 
 # Replica Set Mongo configuration settings.

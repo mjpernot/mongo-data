@@ -98,11 +98,11 @@ class ArgParser():
         return list(self.args_array.keys())
 
 
-class RepSet():                                         # pylint:disable=R0903
+class Server():                                         # pylint:disable=R0903
 
-    """Class:  RepSet
+    """Class:  Server
 
-    Description:  Class stub holder for mongo_class.RepSet class.
+    Description:  Class stub holder for mongo_class.Server class.
 
     Methods:
         __init__
@@ -228,10 +228,12 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_connection_success
+
         test_without_a_option
         test_with_a_option
         test_connection_fail
-        test_connection_success
+        
         test_auth_mech
         test_no_auth_mech
         test_run_program
@@ -257,6 +259,25 @@ class UnitTest(unittest.TestCase):
         self.args2.args_array = {
             "-I": True, "-c": "config", "-d": "dir/path", "-a": "auth_db"}
         self.func_names = {"-I": insert_doc}
+
+    @mock.patch("mongo_db_data.mongo_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.load_module")
+    @mock.patch("mongo_db_data.mongo_class.RepSet")
+    def test_connection_success(self, mock_repset, mock_load):
+
+        """Function:  test_connection_success
+
+        Description:  Test with successful connection.
+
+        Arguments:
+
+        """
+
+        mock_repset.return_value = self.repset
+        mock_load.return_value = self.cfg
+
+        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -333,30 +354,6 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(
                 mongo_db_data.run_program(self.args, self.func_names))
-
-    @mock.patch("mongo_db_data.mongo_libs.disconnect",
-                mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.gen_libs.load_module")
-    @mock.patch("mongo_db_data.get_repset_hosts")
-    @mock.patch("mongo_db_data.get_repset_name")
-    @mock.patch("mongo_db_data.mongo_class.RepSet")
-    def test_connection_success(self, mock_repset, mock_name, mock_hosts,
-                                mock_load):
-
-        """Function:  test_connection_success
-
-        Description:  Test with successful connection.
-
-        Arguments:
-
-        """
-
-        mock_repset.return_value = self.repset
-        mock_hosts.return_value = "RepSetHosts"
-        mock_name.return_value = "RepSetName"
-        mock_load.return_value = self.cfg
-
-        self.assertFalse(mongo_db_data.run_program(self.args, self.func_names))
 
     @mock.patch("mongo_db_data.mongo_libs.disconnect",
                 mock.Mock(return_value=True))

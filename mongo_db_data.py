@@ -126,8 +126,8 @@ exit 2
                     tls_certkey = None
                     tls_certkey_phrase = None
 
-            Note:  FIPS Environment for Mongo.
-              If operating in a FIPS 104-2 environment, this package will
+            Note:  Secure Environment for Mongo.
+              If operating in a secure environment, this package will
               require at least a minimum of pymongo==3.8.0 or better.  It will
               also require a manual change to the auth.py module in the pymongo
               package.  See below for changes to auth.py.
@@ -258,7 +258,7 @@ def get_repset_hosts(svr_cfg):
     return repset_hosts
 
 
-def insert_doc(repclu, args, **kwargs):
+def insert_doc(coll, args, **kwargs):
 
     """Function:  insert_doc
 
@@ -268,7 +268,7 @@ def insert_doc(repclu, args, **kwargs):
         insert multiple external JSON document files into the database.
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance
+        (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
             opt_arg -> Contains list of optional arguments for command line
@@ -278,7 +278,9 @@ def insert_doc(repclu, args, **kwargs):
 
     if args.arg_exist("-f"):
         cmd = mongo_libs.create_cmd(
-            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
+            coll, args, "mongoimport", "-p", use_repset=True, **kwargs)
+#        cmd = mongo_libs.create_cmd(
+#            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
         orig_cmd = list(cmd)
 
         # Process files and add --file option
@@ -334,7 +336,7 @@ def process_args(args):
     return status, qry
 
 
-def delete_docs(repclu, args, **kwargs):                # pylint:disable=W0613
+def delete_docs(coll, args, **kwargs):                # pylint:disable=W0613
 
     """Function:  delete_docs
 
@@ -344,7 +346,7 @@ def delete_docs(repclu, args, **kwargs):                # pylint:disable=W0613
         set of value(s).
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance
+        (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
             opt_arg -> Contains list of optional arguments for command line
@@ -352,52 +354,52 @@ def delete_docs(repclu, args, **kwargs):                # pylint:disable=W0613
 
     """
 
-    coll = mongo_class.RepSetColl(
-        repclu.name, repclu.user, repclu.japd, host=repclu.host,
-        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
-        auth_db=args.get_val("-a", def_val=repclu.auth_db),
-        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
-        ssl_client_ca=repclu.ssl_client_ca,
-        ssl_client_cert=repclu.ssl_client_cert,
-        ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase,
-        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
-        tls_certkey=repclu.tls_certkey,
-        tls_certkey_phrase=repclu.tls_certkey_phrase)
-    status = coll.connect()
+#    coll = mongo_class.RepSetColl(
+#        repclu.name, repclu.user, repclu.japd, host=repclu.host,
+#        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
+#        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
+#        auth_db=args.get_val("-a", def_val=repclu.auth_db),
+#        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
+#        ssl_client_ca=repclu.ssl_client_ca,
+#        ssl_client_cert=repclu.ssl_client_cert,
+#        ssl_client_key=repclu.ssl_client_key,
+#        ssl_client_phrase=repclu.ssl_client_phrase,
+#        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+#        tls_certkey=repclu.tls_certkey,
+#        tls_certkey_phrase=repclu.tls_certkey_phrase)
+#    status = coll.connect()
 
-    if status[0]:
-        if args.arg_exist("-f"):
+#    if status[0]:
+    if args.arg_exist("-f"):
 
-            for fname in args.get_val("-f"):
-                lines = gen_libs.file_2_list(fname)
+        for fname in args.get_val("-f"):
+            lines = gen_libs.file_2_list(fname)
 
-                # Process each line as a delete
-                for qry in lines:
-                    coll.coll_del_many(gen_libs.str_2_type(qry))
+            # Process each line as a delete
+            for qry in lines:
+                coll.coll_del_many(gen_libs.str_2_type(qry))
 
-        # Assume -kN and -lN options
-        else:
-            status, qry = process_args(args)
-
-            if not status:
-                coll.coll_del_many(qry)
-
-        mongo_libs.disconnect([coll])
-
+    # Assume -kN and -lN options
     else:
-        print(f"delete_docs: Connection failure:  {status[1]}")
+        status, qry = process_args(args)
+
+        if not status:
+            coll.coll_del_many(qry)
+
+#        mongo_libs.disconnect([coll])
+
+#    else:
+#        print(f"delete_docs: Connection failure:  {status[1]}")
 
 
-def truncate_coll(repclu, args, **kwargs):              # pylint:disable=W0613
+def truncate_coll(coll, args, **kwargs):
 
     """Function:  truncate_coll
 
     Description:  Truncate a collection in a Mongo database.
 
     Arguments:
-        (input) repclu -> Replication set/cluster instance
+        (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
             opt_arg -> Contains list of optional arguments for command line
@@ -405,28 +407,30 @@ def truncate_coll(repclu, args, **kwargs):              # pylint:disable=W0613
 
     """
 
-    coll = mongo_class.RepSetColl(
-        repclu.name, repclu.user, repclu.japd, host=repclu.host,
-        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
-        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
-        auth_db=args.get_val("-a", def_val=repclu.auth_db),
-        ssl_client_ca=repclu.ssl_client_ca,
-        ssl_client_cert=repclu.ssl_client_cert,
-        ssl_client_key=repclu.ssl_client_key,
-        ssl_client_phrase=repclu.ssl_client_phrase,
-        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
-        tls_certkey=repclu.tls_certkey,
-        tls_certkey_phrase=repclu.tls_certkey_phrase)
-    status = coll.connect()
+    coll.coll_del_many({}, True)
 
-    if status[0]:
-        # Require override option
-        coll.coll_del_many({}, True)
-        mongo_libs.disconnect([coll])
+#    coll = mongo_class.RepSetColl(
+#        repclu.name, repclu.user, repclu.japd, host=repclu.host,
+#        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
+#        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
+#        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
+#        auth_db=args.get_val("-a", def_val=repclu.auth_db),
+#        ssl_client_ca=repclu.ssl_client_ca,
+#        ssl_client_cert=repclu.ssl_client_cert,
+#        ssl_client_key=repclu.ssl_client_key,
+#        ssl_client_phrase=repclu.ssl_client_phrase,
+#        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
+#        tls_certkey=repclu.tls_certkey,
+#        tls_certkey_phrase=repclu.tls_certkey_phrase)
+#    status = coll.connect()
 
-    else:
-        print(f"truncate_coll: Connection failure:  {status[1]}")
+#    if status[0]:
+#        # Require override option
+#        coll.coll_del_many({}, True)
+#        mongo_libs.disconnect([coll])
+
+#    else:
+#        print(f"truncate_coll: Connection failure:  {status[1]}")
 
 
 def run_program(args, func_dict, **kwargs):
@@ -445,34 +449,46 @@ def run_program(args, func_dict, **kwargs):
     """
 
     func_dict = dict(func_dict)
-    svr_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-    rep_set = get_repset_name(svr_cfg)
-    repset_hosts = get_repset_hosts(svr_cfg)
+    cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
+    mongo_cls = mongo_class.Coll
+
+    if cfg.repset:
+        mongo_cls = mongo_class.RepSetColl
+
+    coll = mongo_libs.create_instance(
+        args.get_val("-c"), args.get_val("-d"), mongo_cls)
+    status = coll.connect()
+
+#    svr_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
+#    rep_set = get_repset_name(svr_cfg)
+#    repset_hosts = get_repset_hosts(svr_cfg)
 
     # Only pass authorization mechanism if present
-    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
-        svr_cfg, "auth_mech") else {}
+#    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
+#        svr_cfg, "auth_mech") else {}
 
-    repclu = mongo_class.RepSet(
-        svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
-        port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
-        repset_hosts=repset_hosts,
-        auth_db=args.get_val("-a", def_val=svr_cfg.auth_db),
-        ssl_client_ca=svr_cfg.ssl_client_ca,
-        ssl_client_cert=svr_cfg.ssl_client_cert,
-        ssl_client_key=svr_cfg.ssl_client_key,
-        ssl_client_phrase=svr_cfg.ssl_client_phrase,
-        auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
-        tls_certkey=svr_cfg.tls_certkey,
-        tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
-    status = repclu.connect()
+#    repclu = mongo_class.RepSet(
+#        svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
+#        port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
+#        repset_hosts=repset_hosts,
+#        auth_db=args.get_val("-a", def_val=svr_cfg.auth_db),
+#        ssl_client_ca=svr_cfg.ssl_client_ca,
+#        ssl_client_cert=svr_cfg.ssl_client_cert,
+#        ssl_client_key=svr_cfg.ssl_client_key,
+#        ssl_client_phrase=svr_cfg.ssl_client_phrase,
+#        auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
+#        tls_certkey=svr_cfg.tls_certkey,
+#        tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
+#    status = repclu.connect()
 
     if status[0]:
         # Intersect args_array & func_dict to determine which functions to call
         for func in set(args.get_args_keys()) & set(func_dict.keys()):
-            func_dict[func](repclu, args, **kwargs)
+            func_dict[func](coll, args, **kwargs)
+#            func_dict[func](repclu, args, **kwargs)
 
-        mongo_libs.disconnect([repclu])
+        mongo_libs.disconnect([coll])
+#        mongo_libs.disconnect([repclu])
 
     else:
         print(f"run_program: Connection failure:  {status[1]}")
