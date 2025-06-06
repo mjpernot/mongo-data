@@ -579,7 +579,9 @@ def main():
 
     dir_perms_chk = {"-d": 5, "-p": 5}
     file_perm_chk = {"-f": 6}
-    func_dict = {"-I": insert_doc, "-D": delete_docs, "-T": truncate_coll}
+    func_dict = {
+        "-I": insert_doc, "-D": delete_docs, "-T": truncate_coll,
+        "-K": insert_doc2}
     opt_arg_list = {
         "-a": "--authenticationDatabase=", "-b": "--db=",
         "-t": "--collection="}
