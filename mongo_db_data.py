@@ -290,7 +290,7 @@ def insert_doc2(coll, args, **kwargs):
     """
 
     for fname in args.get_val("-f"):
-        print(f"Debug: Filename: {fname")
+        print(f"Debug: Filename: {fname}")
         with open(fname, mode="r", encoding="UTF-8") as fhdr:
 
             for line in fhdr:
