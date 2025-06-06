@@ -169,6 +169,7 @@ exit 2
 # Standard
 import sys
 import subprocess
+import json
 
 # Local
 try:
@@ -297,7 +298,7 @@ def insert_doc2(coll, args, **kwargs):
                 print(f"Debug: Dataline: {data}")
                 status = mongo_libs.ins_doc(
                     kwargs.get("cfg"), args.get_val("-b"), args.get_val("-t"),
-                    data)
+                    json.loads(data))
 
                 if not status[0]:
                     print("Insertion into Mongo failed.")
