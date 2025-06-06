@@ -294,7 +294,7 @@ def insert_doc2(coll, args, **kwargs):
         with open(fname, mode="r", encoding="UTF-8") as fhdr:
 
             for data in fhdr:
-                print(f"Debug: Dataline: {line}")
+                print(f"Debug: Dataline: {data}")
                 status = mongo_libs.ins_doc(
                     kwargs.get("cfg"), args.get_val("-b"), args.get_val("-t"),
                     data)
