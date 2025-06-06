@@ -28,7 +28,8 @@ exit 2
 
     Usage:
         mongo_db_data.py -c cfg_file -d path
-            {-I -b db_name -t coll_name -f {path/file | path/file*} [-a name] |
+            {-I -b db_name -t coll_name -f {path/file | path/file*} [-a name]
+                [-m path] [-r] |
             {-K -b db_name -t coll_name -f {path/file | path/file*} [-a name] |
              -D -b db_name -t coll_name
                 {-k1 "key" -l1 "value1" ["value2" "value3" ...]
@@ -168,6 +169,7 @@ exit 2
 
 # Standard
 import sys
+import os
 import subprocess
 import json
 
@@ -272,6 +274,70 @@ def help_message():
 #    return repset_hosts
 
 
+def is_file_deletable(fname):
+
+    """Function:  is_file_deletable
+
+    Description:  Determine if a file can be removed.
+
+    Arguments:
+        (input) fname -> Filename and full path
+        (output) status -> True|False - File can be removed
+
+    """
+
+    status = False
+    f_dirname = os.path.dirname(fname)
+
+    # Ensure object is a file and writable and the directory has correct perms
+### STOPPED HERE
+    print('HERE4')
+    if os.path.isfile(fname):
+        print('HERE1')
+        if os.access(fname, os.W_OK):
+            print('HERE2')
+            if os.access(f_dirname, os.W_OK | os.X_OK):
+                print('HERE3')
+                status = True
+
+    return status
+
+
+def post_process(args):
+
+    """Function:  post_process
+
+    Description:  Post processing of files.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+
+    """
+
+    if args.arg_exist("-m"):
+
+        for fname in args.get_val("-f"):
+
+            # Check if file is removable and archive directory writable
+            if args.arg_dir_chk(dir_perms_chk={"-m": 7}) \
+               and is_file_deletable(fname):
+                gen_libs.mv_file2(fname, args.get_val("-m"))
+
+            else:
+                print("post_process: Incorrect perms for file or directory")
+                print(f'\tDirectory: {args.get_val("-m")}')
+                print(f"\tFile: {fname}")
+                
+
+    elif args.arg_exist("-r"):
+        for fname in args.get_val("-f"):
+            status = gen_libs.rm_file(fname)
+
+            if not status[0]:
+                print("post_process: Error encountered during file removal")
+                print(f"Error Message: {status[1]}")
+
+
 def insert_doc2(coll, args, **kwargs):
 
     """Function:  insert_doc2
@@ -299,9 +365,12 @@ def insert_doc2(coll, args, **kwargs):
                     json.loads(data))
 
                 if not status[0]:
-                    print("Insertion into Mongo failed.")
+                    print("insert_doc2: Insertion into Mongo failed.")
                     print(f"Mongo error message:  {status[1]}")
                     print(f"Data: {data}")
+
+    if args.arg_exist("-m") or args.arg_exist("-r"):
+        post_process(args)
 
 
 def insert_doc(coll, args, **kwargs):

@@ -38,6 +38,7 @@ class ArgParser():
     Methods:
         __init__
         get_val
+        arg_exist
 
     """
 
@@ -65,6 +66,18 @@ class ArgParser():
 
         return self.args_array.get(skey, def_val)
 
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return arg in self.args_array
+
 
 class UnitTest(unittest.TestCase):
 
@@ -74,6 +87,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_file_m_r_option
+        test_file_r_option
+        test_file_m_option
+        test_file_no_move
         test_insert_fail
         test_multiple_files
         test_one_file
@@ -94,6 +111,77 @@ class UnitTest(unittest.TestCase):
         self.args = ArgParser()
         self.coll = mongo_class.Coll("ServerName", "root", "japd")
         self.file = "test/unit/mongo_db_data/test_files/insert_doc2_data.py"
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    def test_file_m_r_option(self):
+
+        """Function:  test_file_m_r_option
+
+        Description:  Test with post processing of file using -m and -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-f"] = [self.file]
+        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-r"] = True
+
+        self.assertFalse(mongo_db_data.insert_doc2(self.coll, self.args))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    def test_file_r_option(self):
+
+        """Function:  test_file_r_option
+
+        Description:  Test with post processing of file using -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-f"] = [self.file]
+        self.args.args_array["-r"] = True
+
+        self.assertFalse(mongo_db_data.insert_doc2(self.coll, self.args))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    def test_file_m_option(self):
+
+        """Function:  test_file_m_option
+
+        Description:  Test with post processing of file using -m option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-f"] = [self.file]
+        self.args.args_array["-m"] = "/path"
+
+        self.assertFalse(mongo_db_data.insert_doc2(self.coll, self.args))
+
+    @mock.patch("mongo_db_data.mongo_libs.ins_doc",
+                mock.Mock(return_value=(True, None)))
+    def test_file_no_move(self):
+
+        """Function:  test_file_no_move
+
+        Description:  Test with no post processing of file.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-f"] = [self.file]
+
+        self.assertFalse(mongo_db_data.insert_doc2(self.coll, self.args))
 
     @mock.patch("mongo_db_data.mongo_libs.ins_doc",
                 mock.Mock(return_value=(False, "ErrorMessage")))

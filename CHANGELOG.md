@@ -17,6 +17,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - run_program: Create mongo_class.RepSetColl or mongo_class.Coll depending on settings in configuration file and removed mongo_class.RepSet creation.
 
 ### Added
+- post_process: Post processing of files.
+- is_file_deletable: Determine if a file can be removed.
 - insert_doc2: Insert of documents into a Mongo database using the Mongo insert command.
 
 ### Changed

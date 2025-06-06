@@ -11,6 +11,7 @@ echo "Unit testing..."
 /usr/bin/python test/unit/mongo_db_data/insert_doc.py
 /usr/bin/python test/unit/mongo_db_data/insert_doc2.py
 /usr/bin/python test/unit/mongo_db_data/main.py
+/usr/bin/python test/unit/mongo_db_data/post_process.py
 /usr/bin/python test/unit/mongo_db_data/process_args.py
 /usr/bin/python test/unit/mongo_db_data/run_program.py
 /usr/bin/python test/unit/mongo_db_data/truncate_coll.py
