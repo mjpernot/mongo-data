@@ -28,15 +28,13 @@ import version                                  # pylint:disable=E0401,C0413
 __version__ = version.__version__
 
 
-def insert_doc(repset, args_array):
+def insert_doc(repset, args_array, cfg=None):
 
     """Function:  insert_doc
 
     Description:  Stub holder for mongo_db_data.insert_doc function.
 
     Arguments:
-        (input) repset -> Replication set instance.
-        (input) args_array -> Array of command line options and values.
 
     """
 
