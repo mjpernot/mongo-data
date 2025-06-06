@@ -28,20 +28,29 @@ exit 2
 
     Usage:
         mongo_db_data.py -c cfg_file -d path
-            {-I -b db_name -t coll_name -a name -f {path/file | path/file*} |
+            {-I -b db_name -t coll_name -f {path/file | path/file*} [-a name] |
+            {-K -b db_name -t coll_name -f {path/file | path/file*} [-a name] |
              -D -b db_name -t coll_name
                 {-k1 "key" -l1 "value1" ["value2" "value3" ...]
                  [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
                  [-f {path/file | path/file*}] [-a name]} |
              -T -b db_name -t coll_name [-a name]}
-             [-p path}
+            [-p path]
             [-v | -h]
 
     Arguments:
-        -c cfg_file => Mongo configuration file.  Required arg.
-        -d dir path => Config directory path.  Required arg.
+        -c cfg_file => Mongo configuration file.
+        -d dir path => Config directory path.
 
-        -I => Insert JSON document into database.
+        -I => Import JSON document into database.
+            -b db_name => Database Name.
+            -t coll_name => Collection Name.
+            -f file(s) => JSON document to be imported.  Requires absolute
+                path.
+            -a name => Authentication Database Name.  Required for accounts
+                not in database (-b option).
+
+        -K => Insert JSON document entries into database.
             -b db_name => Database Name.
             -t coll_name => Collection Name.
             -f file(s) => JSON document to be inserted.  Requires absolute
@@ -72,9 +81,13 @@ exit 2
         -h => Help and usage message.
 
         NOTE 1:  -v and/or -h overrides all other options.
-        NOTE 2:  -I and -D are XOR options.
+        NOTE 2:  -I, -K, -T and -D are XOR options.
         NOTE 3:  -k1 and -l1 are required to be paried for -D option.
             -k[2-5] and -l[2-5] are optional, but are required to be paired.
+        NOTE 4:  The difference between -I and -K options are: -I uses the
+            mongoimport command to insert in bulk all entries into a
+            collection, whereas the -K option uses the insert command to insert
+            one entry at a time into the collection.
 
     Notes:
         Mongo configuration file format (config/mongo.py.TEMPLATE).  The
@@ -258,19 +271,49 @@ def help_message():
 #    return repset_hosts
 
 
-def insert_doc(coll, args, **kwargs):
+def insert_doc2(coll, args, **kwargs):
 
-    """Function:  insert_doc
+    """Function:  insert_doc2
 
-    Description:  Insertion of document(s) into a Mongo database.  The document
-        can either be an external JSON document(s) or created internally
-        and then inserted into the database.  Have the ability to
-        insert multiple external JSON document files into the database.
+    Description:  Insert of document(s) into a Mongo database.  Have the
+        ability to insert multiple external JSON document files into the
+        database.
 
     Arguments:
         (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
+            cfg -> Configuration setup
+            opt_arg -> Contains list of optional arguments for command line
+            opt_rep -> Contains list of replaceable arguments for command line
+
+    """
+
+    for fname in args.get_val("-f"):
+        with open(fname, mode="r", encoding="UTF-8") as fhdr:
+
+            for line in fhdr:
+                status = mongo_libs.ins_doc(cfg, cfg.dbs, cfg.tbl, data)
+
+                if not status[0]:
+                    print("Insertion into Mongo failed.")
+                    print(f"Mongo error message:  {status[1]}")
+                    print(f"Data: {data}")
+
+
+def insert_doc(coll, args, **kwargs):
+
+    """Function:  insert_doc
+
+    Description:  Import of document(s) into a Mongo database.  Have the
+        ability to import multiple external JSON document files into the
+        database.
+
+    Arguments:
+        (input) coll -> Mongo collection instance
+        (input) args -> ArgParser class instance
+        (input) kwargs:
+            cfg -> Configuration setup
             opt_arg -> Contains list of optional arguments for command line
             opt_rep -> Contains list of replaceable arguments for command line
 
@@ -354,6 +397,7 @@ def delete_docs(coll, args, **kwargs):                # pylint:disable=W0613
         (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
+            cfg -> Configuration setup
             opt_arg -> Contains list of optional arguments for command line
             opt_rep -> Contains list of replaceable arguments for command line
 
@@ -407,6 +451,7 @@ def truncate_coll(coll, args, **kwargs):
         (input) coll -> Mongo collection instance
         (input) args -> ArgParser class instance
         (input) kwargs:
+            cfg -> Configuration setup
             opt_arg -> Contains list of optional arguments for command line
             opt_rep -> Contains list of replaceable arguments for command line
 
@@ -495,7 +540,7 @@ def run_program(args, func_dict, **kwargs):
     if status[0]:
         # Intersect args_array & func_dict to determine which functions to call
         for func in set(args.get_args_keys()) & set(func_dict.keys()):
-            func_dict[func](coll, args, **kwargs)
+            func_dict[func](coll, args, cfg=cfg, **kwargs)
 #            func_dict[func](repclu, args, **kwargs)
 
         mongo_libs.disconnect([coll])
@@ -537,13 +582,18 @@ def main():
         "-a": "--authenticationDatabase=", "-b": "--db=",
         "-t": "--collection="}
     opt_arg_rep = {"-f": "--file="}
-    opt_con_req_list = {"-k1": ["-l1"]}
+    opt_con_req_list = {
+        "-k1": ["-l1"], "-k2": ["-l2"], "-k3": ["-l3"], "-k4": ["-l4"],
+        "-k5": ["-l5"], "-I": ["-b", "-t", "-f"], "-K": ["-b", "-t", "-f"],
+        "-D": ["-b", "-t"], "-T": ["-b", "-t"]}
     opt_multi_list = ["-f", "-l1", "-l2", "-l3", "-l4", "-l5"]
     opt_req_list = ["-b", "-c", "-d", "-t"]
     opt_val_list = [
         "-a", "-b", "-c", "-d", "-f", "-k1", "-l1", "-p", "-t", "-k2", "-l2",
         "-k3", "-l3", "-k4", "-l4", "-k5", "-l5"]
-    opt_xor_dict = {"-D": ["-I", "-T"], "-I": ["-D", "-T"], "-T": ["-D", "-I"]}
+    opt_xor_dict = {
+        "-D": ["-I", "-T", "-K"], "-I": ["-D", "-T", "-K"],
+        "-T": ["-D", "-I", "-K"], "-K": ["-D", "-T", "-I"]}
     xor_noreq_list = {"-k1": "-f"}
 
     # Process argument list from command line
