@@ -295,7 +295,8 @@ def insert_doc2(coll, args, **kwargs):
 
             for line in fhdr:
                 print(f"Debug: Dataline: {line}")
-                status = mongo_libs.ins_doc(cfg, cfg.dbs, cfg.tbl, data)
+                status = mongo_libs.ins_doc(
+                    kwargs.get("cfg"), cfg.dbs, cfg.tbl, data)
 
                 if not status[0]:
                     print("Insertion into Mongo failed.")
