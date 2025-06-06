@@ -293,10 +293,11 @@ def insert_doc2(coll, args, **kwargs):
         print(f"Debug: Filename: {fname}")
         with open(fname, mode="r", encoding="UTF-8") as fhdr:
 
-            for line in fhdr:
+            for data in fhdr:
                 print(f"Debug: Dataline: {line}")
                 status = mongo_libs.ins_doc(
-                    kwargs.get("cfg"), cfg.dbs, cfg.tbl, data)
+                    kwargs.get("cfg"), args.get_val("-b"), args.get_val("-t"),
+                    data)
 
                 if not status[0]:
                     print("Insertion into Mongo failed.")
