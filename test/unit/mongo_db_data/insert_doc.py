@@ -22,6 +22,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mongo_db_data                            # pylint:disable=E0401,C0413
+import mongo_lib.mongo_class as mongo_class  # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
@@ -118,6 +119,12 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_file_m_r_option
+        test_file_r_option
+        test_file_m_option
+        test_file_no_move
+        test_insert_nonrep
+        test_insert_rep
         test_empty_list
         test_insert_doc
         test_no_files
@@ -136,12 +143,149 @@ class UnitTest(unittest.TestCase):
 
         self.subproc = SubProcess()
         self.opt_rep = {"-f": "--file="}
-        self.repset = "RepSetInstance"
+        self.repcoll = mongo_class.RepSetColl("ServerName", "root", "japd")
+        self.coll = mongo_class.Coll("ServerName", "root", "japd")
         self.args = ArgParser()
         self.args2 = ArgParser()
         self.args3 = ArgParser()
         self.args.args_array = {"-f": ["File1"]}
         self.args2.args_array = {"-f": []}
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_m_r_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_m_r_option
+
+        Description:  Test with post processing of file using -m and -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-r"] = True
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_r_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_r_option
+
+        Description:  Test with post processing of file using -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-r"] = True
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_m_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_m_option
+
+        Description:  Test with post processing of file using -m option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-m"] = "/path"
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_no_move(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_no_move
+
+        Description:  Test with no post processing of file.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_insert_nonrep(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_insert_nonrep
+
+        Description:  Test with inserting using standalone.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.coll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_insert_rep(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_insert_rep
+
+        Description:  Test with inserting using replica set.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
 
     @mock.patch("mongo_db_data.mongo_libs.create_cmd")
     def test_empty_list(self, mock_cmd):
@@ -156,7 +300,7 @@ class UnitTest(unittest.TestCase):
 
         mock_cmd.return_value = ["Command", "List"]
 
-        self.assertFalse(mongo_db_data.insert_doc(self.repset, self.args2))
+        self.assertFalse(mongo_db_data.insert_doc(self.repcoll, self.args2))
 
     @mock.patch("mongo_db_data.gen_libs.add_cmd")
     @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
@@ -177,7 +321,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             mongo_db_data.insert_doc(
-                self.repset, self.args, opt_rep=self.opt_rep))
+                self.repcoll, self.args, opt_rep=self.opt_rep))
 
     def test_no_files(self):
 
@@ -189,7 +333,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mongo_db_data.insert_doc(self.repset, self.args3))
+        self.assertFalse(mongo_db_data.insert_doc(self.repcoll, self.args3))
 
 
 if __name__ == "__main__":
