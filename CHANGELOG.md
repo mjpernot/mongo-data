@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [5.0.0] - 2025-06-03
+- Breaking changes
+- Added option to insert data as individual entries (-K option).
+- Added -r (remove) and -m (archive) options for the insert and import options.
+- Major refactoring of program to handle standalone or replica set Mongo databases.
+- Updated to work with pymongo v4.X
+- Updated mongo-lib to v4.5.3
+- Updated python-lib to v4.0.1
+
+### Fixed
+- main: Added missing -k and -l pairs to conditional requirement list.
+- run_program: Create mongo_class.RepSetColl or mongo_class.Coll depending on settings in configuration file and removed mongo_class.RepSet creation.
+
+### Added
+- post_process: Post processing of files.
+- is_file_deletable: Determine if a file can be removed.
+- insert_doc2: Insert of documents into a Mongo database using the Mongo insert command.
+
+### Changed
+- insert_doc: Added options to archive or remove file(s) after the import is completed.
+- run_program: Passed the cfg argument to the func_dict call.
+- main: Added required options for each of the main options to the conditional requirements list.
+- main: Removed checking for duplicates in the -f argument, removed parsing from gen_class.ArgParser creation and to arg_parse2 call.
+- insert_doc: Replaced mongo_class.RepSetColl with collection instance passed to function and determine if standalone or replica set is being used.
+- delete_docs, truncate_coll: Replaced mongo_class.RepSetColl with collection instance passed to function.
+- run_program: Removed check on auth_mech setting and removed calls to get_repset_name and get_repset_hosts.
+- Documentation changes.
+
+### Removed
+- Removed get_repset_name function.
+- Removed get_repset_hosts function.
+
+
 ## [4.0.1] - 2025-03-11
 - Updated mongo-libs to v4.5.1
 
