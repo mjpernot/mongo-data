@@ -110,7 +110,7 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.coll = mongo_class.Coll("ServerName", "root", "japd")
-        self.file = "test/unit/mongo_db_data/test_files/insert_doc2_data.py"
+        self.file = "test/unit/mongo_db_data/test_files/insert_doc2_data.txt"
 
     @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
     @mock.patch("mongo_db_data.mongo_libs.ins_doc",

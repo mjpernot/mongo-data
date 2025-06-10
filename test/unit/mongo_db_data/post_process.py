@@ -127,6 +127,7 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.file = "test/unit/mongo_db_data/test_files/insert_doc2_data.py"
+        self.path = "/path"
 
     @mock.patch("mongo_db_data.gen_libs.rm_file",
                 mock.Mock(return_value=(True, "ErrorMessage")))
@@ -193,7 +194,7 @@ class UnitTest(unittest.TestCase):
 
         self.args.dir_perms_chk_results = False
 
-        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-m"] = self.path
 
         with gen_libs.no_std_out():
             self.assertFalse(mongo_db_data.post_process(self.args))
@@ -210,7 +211,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-m"] = self.path
 
         with gen_libs.no_std_out():
             self.assertFalse(mongo_db_data.post_process(self.args))
@@ -225,7 +226,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-m"] = self.path
         self.args.args_array["-f"] = []
 
         self.assertFalse(mongo_db_data.post_process(self.args))
@@ -244,7 +245,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-m"] = self.path
 
         self.assertFalse(mongo_db_data.post_process(self.args))
 
