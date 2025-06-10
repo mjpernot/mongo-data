@@ -257,8 +257,7 @@ def post_process(args):
             else:
                 print("post_process: Incorrect perms for file or directory")
                 print(f'\tDirectory: {args.get_val("-m")}')
-                print(f"\tFile: {fname}")
-                
+                print(f"\tFile: {fname}")                
 
     elif args.arg_exist("-r"):
         for fname in args.get_val("-f"):
@@ -322,10 +321,10 @@ def insert_doc(coll, args, **kwargs):
 
     """
 
-    use_repset=False
+    use_repset = False
 
     if isinstance(coll, mongo_class.RepSetColl):
-        use_repset=True
+        use_repset = True
 
     if args.arg_exist("-f"):
         cmd = mongo_libs.create_cmd(

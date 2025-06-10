@@ -49,6 +49,7 @@ class CfgTest2():                                       # pylint:disable=R0903
 
         self.name = "MongoName"
 
+
 class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest

@@ -55,7 +55,8 @@ class UnitTest(unittest.TestCase):
         self.fname = "/path/filename.txt"
 
     @mock.patch("mongo_db_data.os.access", mock.Mock(return_value=True))
-    @mock.patch("mongo_db_data.os.path.isfile", mock.Mock(side_effect=[True, True]))
+    @mock.patch("mongo_db_data.os.path.isfile",
+                mock.Mock(side_effect=[True, True]))
     def test_all_checks_pass(self):
 
         """Function:  test_all_checks_pass
@@ -69,7 +70,8 @@ class UnitTest(unittest.TestCase):
         self.assertTrue(mongo_db_data.is_file_deletable(self.fname))
 
     @unittest.skip("Error: Unable to to get os.path.isfile to mock correctly.")
-    @mock.patch("mongo_db_data.os.path.isfile", mock.Mock(side_effect=[True, False]))
+    @mock.patch("mongo_db_data.os.path.isfile",
+                mock.Mock(side_effect=[True, False]))
     @mock.patch("mongo_db_data.os.access", mock.Mock(return_value=True))
     def test_dir_non_writable(self):
 
