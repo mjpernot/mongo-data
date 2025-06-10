@@ -264,7 +264,7 @@ def post_process(args):
         for fname in args.get_val("-f"):
             status = gen_libs.rm_file(fname)
 
-            if not status[0]:
+            if status[0]:
                 print("post_process: Error encountered during file removal")
                 print(f"Error Message: {status[1]}")
 

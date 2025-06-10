@@ -129,7 +129,7 @@ class UnitTest(unittest.TestCase):
         self.file = "test/unit/mongo_db_data/test_files/insert_doc2_data.py"
 
     @mock.patch("mongo_db_data.gen_libs.rm_file",
-                mock.Mock(return_value=(False, "ErrorMessage")))
+                mock.Mock(return_value=(True, "ErrorMessage")))
     def test_r_option_rm_failed(self):
 
         """Function:  test_r_option_rm_failed
@@ -146,7 +146,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mongo_db_data.post_process(self.args))
 
     @mock.patch("mongo_db_data.gen_libs.rm_file",
-                mock.Mock(return_value=(True, None)))
+                mock.Mock(return_value=(False, None)))
     def test_r_option_no_files(self):
 
         """Function:  test_r_option_no_files
@@ -163,7 +163,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mongo_db_data.post_process(self.args))
 
     @mock.patch("mongo_db_data.gen_libs.rm_file",
-                mock.Mock(return_value=(True, None)))
+                mock.Mock(return_value=(False, None)))
     def test_r_option(self):
 
         """Function:  test_r_option
