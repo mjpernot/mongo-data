@@ -290,14 +290,9 @@ def is_file_deletable(fname):
     f_dirname = os.path.dirname(fname)
 
     # Ensure object is a file and writable and the directory has correct perms
-### STOPPED HERE
-    print('HERE4')
     if os.path.isfile(fname):
-        print('HERE1')
         if os.access(fname, os.W_OK):
-            print('HERE2')
             if os.access(f_dirname, os.W_OK | os.X_OK):
-                print('HERE3')
                 status = True
 
     return status
