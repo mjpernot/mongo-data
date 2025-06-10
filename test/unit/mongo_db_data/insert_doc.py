@@ -119,6 +119,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_file_m_r_option
+        test_file_r_option
+        test_file_m_option
+        test_file_no_move
         test_insert_nonrep
         test_insert_rep
         test_empty_list
@@ -146,6 +150,100 @@ class UnitTest(unittest.TestCase):
         self.args3 = ArgParser()
         self.args.args_array = {"-f": ["File1"]}
         self.args2.args_array = {"-f": []}
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_m_r_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_m_r_option
+
+        Description:  Test with post processing of file using -m and -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-m"] = "/path"
+        self.args.args_array["-r"] = True
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_r_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_r_option
+
+        Description:  Test with post processing of file using -r option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-r"] = True
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.post_process", mock.Mock(return_value=True))
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_m_option(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_m_option
+
+        Description:  Test with post processing of file using -m option.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-m"] = "/path"
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
+
+    @mock.patch("mongo_db_data.gen_libs.add_cmd")
+    @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")
+    @mock.patch("mongo_db_data.mongo_libs.create_cmd")
+    def test_file_no_move(self, mock_cmd, mock_open, mock_add):
+
+        """Function:  test_file_no_move
+
+        Description:  Test with no post processing of file.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["Command", "List"]
+        mock_add.return_value = ["Command", "List", "Updated"]
+        mock_open.return_value = self.subproc
+
+        self.assertFalse(
+            mongo_db_data.insert_doc(
+                self.repcoll, self.args, opt_rep=self.opt_rep))
 
     @mock.patch("mongo_db_data.gen_libs.add_cmd")
     @mock.patch("mongo_db_data.gen_libs.subprocess.Popen")

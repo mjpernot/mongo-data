@@ -7,6 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [5.0.0] - 2025-06-03
 - Breaking changes
 - Added option to insert data as individual entries (-K option).
+- Added -r (remove) and -m (archive) options for the insert and import options.
 - Major refactoring of program to handle standalone or replica set Mongo databases.
 - Updated to work with pymongo v4.X
 - Updated mongo-lib to v4.5.3
@@ -22,6 +23,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - insert_doc2: Insert of documents into a Mongo database using the Mongo insert command.
 
 ### Changed
+- insert_doc: Added options to archive or remove file(s) after the import is completed.
 - run_program: Passed the cfg argument to the func_dict call.
 - main: Added required options for each of the main options to the conditional requirements list.
 - main: Removed checking for duplicates in the -f argument, removed parsing from gen_class.ArgParser creation and to arg_parse2 call.

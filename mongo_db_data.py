@@ -30,7 +30,8 @@ exit 2
         mongo_db_data.py -c cfg_file -d path
             {-I -b db_name -t coll_name -f {path/file | path/file*} [-a name]
                 [-m path] [-r] |
-            {-K -b db_name -t coll_name -f {path/file | path/file*} [-a name] |
+            {-K -b db_name -t coll_name -f {path/file | path/file*} [-a name]
+                [-m path] [-r] |
              -D -b db_name -t coll_name
                 {-k1 "key" -l1 "value1" ["value2" "value3" ...]
                  [-k[2-5] "key" -l[2-5] "value1" ["value2" "value3" ...]] |
@@ -50,6 +51,8 @@ exit 2
                 path.
             -a name => Authentication Database Name.  Required for accounts
                 not in database (-b option).
+            -m path => Archive the file(s) to the directory.
+            -r => Remove the files once the insertion is completed.
 
         -K => Insert JSON document entries into database.
             -b db_name => Database Name.
@@ -58,6 +61,8 @@ exit 2
                 path.
             -a name => Authentication Database Name.  Required for accounts
                 not in database (-b option).
+            -m path => Archive the file(s) to the directory.
+            -r => Remove the files once the insertion is completed.
 
         -D => Delete JSON document from database.
             -b db_name => Database Name.
@@ -205,75 +210,6 @@ def help_message():
     print(__doc__)
 
 
-#def get_repset_name(svr_cfg):
-
-#    """Function:  get_repset_name
-
-#    Description:  Fetch the Replication Set Name from the condfiguration file
-#        or from the Mongo database.
-
-#    Arguments:
-#        (input) svr_cfg -> Server configuration module
-#        (output) rep_set -> Replication set name
-
-#    """
-
-    # Only pass authorization mechanism if present.
-#    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
-#        svr_cfg, "auth_mech") else {}
-
-#    try:
-#        rep_set = svr_cfg.repset
-
-#    except AttributeError:
-#        coll = mongo_class.Coll(
-#            svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
-#            port=svr_cfg.port, db="local", coll="system.replset",
-#            auth=svr_cfg.auth, conf_file=svr_cfg.conf_file,
-#            ssl_client_ca=svr_cfg.ssl_client_ca,
-#            ssl_client_cert=svr_cfg.ssl_client_cert,
-#            ssl_client_key=svr_cfg.ssl_client_key,
-#            ssl_client_phrase=svr_cfg.ssl_client_phrase,
-#            auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
-#            tls_certkey=svr_cfg.tls_certkey,
-#            tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
-#        status = coll.connect()
-#        rep_set = None
-
-#        if status[0]:
-#            if coll.coll_cnt() != 0:
-#                rep_set = coll.coll_find1().get("_id")
-
-#            mongo_libs.disconnect([coll])
-
-#        else:
-#            print(f"get_repset_name: Connection failure:  {status[1]}")
-
-#    return rep_set
-
-
-#def get_repset_hosts(svr_cfg):
-
-#    """Function:  get_repset_hosts
-
-#    Description:  See if the Rep Set hosts is in the config file, otherwise set
-#        to None.
-
-#    Arguments:
-#        (input) svr_cfg -> Server Configuration module
-#        (output) repset_hosts -> Contain string of rep set hosts
-
-#    """
-
-#    try:
-#        repset_hosts = svr_cfg.repset_hosts
-
-#    except AttributeError:
-#        repset_hosts = None
-
-#    return repset_hosts
-
-
 def is_file_deletable(fname):
 
     """Function:  is_file_deletable
@@ -394,8 +330,6 @@ def insert_doc(coll, args, **kwargs):
     if args.arg_exist("-f"):
         cmd = mongo_libs.create_cmd(
             coll, args, "mongoimport", "-p", use_repset=use_repset, **kwargs)
-#        cmd = mongo_libs.create_cmd(
-#            repclu, args, "mongoimport", "-p", use_repset=True, **kwargs)
         orig_cmd = list(cmd)
 
         # Process files and add --file option
@@ -405,6 +339,9 @@ def insert_doc(coll, args, **kwargs):
             proc1 = subprocess.Popen(upd_cmd)           # pylint:disable=R1732
             proc1.wait()
             cmd = list(orig_cmd)
+
+    if args.arg_exist("-m") or args.arg_exist("-r"):
+        post_process(args)
 
 
 def process_args(args):
@@ -470,22 +407,6 @@ def delete_docs(coll, args, **kwargs):                # pylint:disable=W0613
 
     """
 
-#    coll = mongo_class.RepSetColl(
-#        repclu.name, repclu.user, repclu.japd, host=repclu.host,
-#        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-#        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
-#        auth_db=args.get_val("-a", def_val=repclu.auth_db),
-#        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
-#        ssl_client_ca=repclu.ssl_client_ca,
-#        ssl_client_cert=repclu.ssl_client_cert,
-#        ssl_client_key=repclu.ssl_client_key,
-#        ssl_client_phrase=repclu.ssl_client_phrase,
-#        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
-#        tls_certkey=repclu.tls_certkey,
-#        tls_certkey_phrase=repclu.tls_certkey_phrase)
-#    status = coll.connect()
-
-#    if status[0]:
     if args.arg_exist("-f"):
 
         for fname in args.get_val("-f"):
@@ -501,11 +422,6 @@ def delete_docs(coll, args, **kwargs):                # pylint:disable=W0613
 
         if not status:
             coll.coll_del_many(qry)
-
-#        mongo_libs.disconnect([coll])
-
-#    else:
-#        print(f"delete_docs: Connection failure:  {status[1]}")
 
 
 def truncate_coll(coll, args, **kwargs):
@@ -525,29 +441,6 @@ def truncate_coll(coll, args, **kwargs):
     """
 
     coll.coll_del_many({}, True)
-
-#    coll = mongo_class.RepSetColl(
-#        repclu.name, repclu.user, repclu.japd, host=repclu.host,
-#        port=repclu.port, auth=repclu.auth, repset=repclu.repset,
-#        repset_hosts=repclu.repset_hosts, db=args.get_val("-b"),
-#        coll=args.get_val("-t"), auth_mech=repclu.auth_mech,
-#        auth_db=args.get_val("-a", def_val=repclu.auth_db),
-#        ssl_client_ca=repclu.ssl_client_ca,
-#        ssl_client_cert=repclu.ssl_client_cert,
-#        ssl_client_key=repclu.ssl_client_key,
-#        ssl_client_phrase=repclu.ssl_client_phrase,
-#        auth_type=repclu.auth_type, tls_ca_certs=repclu.tls_ca_certs,
-#        tls_certkey=repclu.tls_certkey,
-#        tls_certkey_phrase=repclu.tls_certkey_phrase)
-#    status = coll.connect()
-
-#    if status[0]:
-#        # Require override option
-#        coll.coll_del_many({}, True)
-#        mongo_libs.disconnect([coll])
-
-#    else:
-#        print(f"truncate_coll: Connection failure:  {status[1]}")
 
 
 def run_program(args, func_dict, **kwargs):
@@ -582,36 +475,12 @@ def run_program(args, func_dict, **kwargs):
 
     status = coll.connect()
 
-#    svr_cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-#    rep_set = get_repset_name(svr_cfg)
-#    repset_hosts = get_repset_hosts(svr_cfg)
-
-    # Only pass authorization mechanism if present
-#    auth_mech = {"auth_mech": svr_cfg.auth_mech} if hasattr(
-#        svr_cfg, "auth_mech") else {}
-
-#    repclu = mongo_class.RepSet(
-#        svr_cfg.name, svr_cfg.user, svr_cfg.japd, host=svr_cfg.host,
-#        port=svr_cfg.port, auth=svr_cfg.auth, repset=rep_set,
-#        repset_hosts=repset_hosts,
-#        auth_db=args.get_val("-a", def_val=svr_cfg.auth_db),
-#        ssl_client_ca=svr_cfg.ssl_client_ca,
-#        ssl_client_cert=svr_cfg.ssl_client_cert,
-#        ssl_client_key=svr_cfg.ssl_client_key,
-#        ssl_client_phrase=svr_cfg.ssl_client_phrase,
-#        auth_type=svr_cfg.auth_type, tls_ca_certs=svr_cfg.tls_ca_certs,
-#        tls_certkey=svr_cfg.tls_certkey,
-#        tls_certkey_phrase=svr_cfg.tls_certkey_phrase, **auth_mech)
-#    status = repclu.connect()
-
     if status[0]:
         # Intersect args_array & func_dict to determine which functions to call
         for func in set(args.get_args_keys()) & set(func_dict.keys()):
             func_dict[func](coll, args, cfg=cfg, **kwargs)
-#            func_dict[func](repclu, args, **kwargs)
 
         mongo_libs.disconnect([coll])
-#        mongo_libs.disconnect([repclu])
 
     else:
         print(f"run_program: Connection failure:  {status[1]}")
@@ -659,7 +528,7 @@ def main():
     opt_req_list = ["-b", "-c", "-d", "-t"]
     opt_val_list = [
         "-a", "-b", "-c", "-d", "-f", "-k1", "-l1", "-p", "-t", "-k2", "-l2",
-        "-k3", "-l3", "-k4", "-l4", "-k5", "-l5"]
+        "-k3", "-l3", "-k4", "-l4", "-k5", "-l5", "-m"]
     opt_xor_dict = {
         "-D": ["-I", "-T", "-K"], "-I": ["-D", "-T", "-K"],
         "-T": ["-D", "-I", "-K"], "-K": ["-D", "-T", "-I"]}
@@ -668,10 +537,6 @@ def main():
     # Process argument list from command line
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list)
-
-#    # Remove dupe files
-#    if args.arg_exist("-f"):
-#        args.update_arg("-f", gen_libs.rm_dup_list(args.get_val("-f")))
 
     if args.arg_parse2()                                            \
        and not gen_libs.help_func(args, __version__, help_message)  \
